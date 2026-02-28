@@ -1,1 +1,155 @@
-//hi
+
+package hotelapp;
+
+public class Room{
+    private static int roomCounter; //helps identify room number
+    private int roomNumber;
+    private String roomType;
+    private int floorNumber;
+    private double pricePerNight;
+    private String roomStatus = "Available";
+    private int maxOccupancy;
+    private String [] amenities = new String[4];
+    private String bedType;
+
+    //will help set details of rooms when booking
+    public Room(String roomType, int floorNumber, String bedType) {
+        setRoomType(roomType);
+        setFloorNumber(floorNumber);
+        setMaxOccupancy();
+        
+        this.roomStatus = "Reserved";
+        
+        //helps identify amenities available in each room type
+        switch(this.roomType){
+            case "Single":
+                amenities[0] = "Wifi";
+                break;
+            case "Double":
+                amenities[0] = "Wifi";
+                amenities[1] = "Mini Bar";
+                break;
+            case "Suite":
+                amenities[0] = "Wifi";
+                amenities[1] = "Mini Bar";
+                amenities[2] = "Sea View";
+                break;
+            case "Deluxe":
+                amenities[0] = "Wifi";
+                amenities[1] = "Mini Bar";
+                amenities[2] = "Sea View";
+                amenities[3] = "Balcony";
+                break;
+                
+        }
+        
+        //sets price based on room type
+        switch(this.roomType){
+            case "Single":
+                pricePerNight = 500.0;
+                break;
+            case "Double":
+                pricePerNight = 1000.0;
+                break;
+            case "Suite":
+                pricePerNight = 2000.0;
+                break;
+            case "Deluxe":
+                pricePerNight = 3000.0;
+                break;
+                
+        }
+        
+        //makes sure that the bed type selected is valid
+        switch (bedType) {
+            case "Single":
+            case "Double":
+            case "King":
+                this.bedType = bedType;
+            default:
+                System.out.println("Invalid!");
+        }
+        
+        roomCounter++;
+    }
+
+    //make sure the room number stays within 1-20
+    public void setRoomNumber() {
+        while(this.roomNumber == 0){
+            if(roomCounter > 0 & roomCounter < 21)
+                this.roomNumber = roomCounter;
+            else
+                roomCounter = 0;
+        }
+    }
+
+    // makes sure the room type selected is valid
+    public void setRoomType(String roomType) {
+        switch (roomType) {
+            case "Single":
+            case "Double":
+            case "Suite":
+            case "Deluxe":
+                this.roomType = roomType;
+                break;
+            default:
+                System.out.println("Invalid!");
+        }
+    }
+
+    //make sure that floor number stays between 1-10
+    public void setFloorNumber(int floorNumber) {
+        if(floorNumber > 0 & floorNumber < 11)
+            this.floorNumber = floorNumber;
+        else
+            System.out.println("Invalid!");
+    }
+
+    //used by the receptionist to change the room status
+    public void setRoomStatus(String roomStatus) {
+        switch(roomStatus){
+            case "Available":
+            case "Occupied":
+            case "Under Maintenance":
+            case "Reserved":
+                this.roomStatus = roomStatus;
+                break;
+            default:
+                System.out.println("Invalid!");
+        }
+    }
+
+    //helps identify max occupancy based on room type
+    public void setMaxOccupancy() {
+        switch(this.roomType){
+            case "Single":
+                this.maxOccupancy = 1;
+                break;
+            case "Double":
+                this.maxOccupancy = 2;
+                break;
+            case "Suite":
+                this.maxOccupancy = 3;
+                break;
+            case "Deluxe":
+                this.maxOccupancy = 4;
+                break;
+                
+        }
+    }
+
+    //Allows the manager to change the amenities of the rooms
+    public void setAmenities(String [] amenitiesFromManager) {
+        amenities = amenitiesFromManager;
+    }
+
+    //Allows the manager to change the bed type of the rooms
+    public void setBedType(String bedTypeFromManager) {
+        bedType = bedTypeFromManager;
+    }
+    
+    //Allows the manager to change the price of the rooms
+    public void setPricePerNight(double priceFromManager) {
+        pricePerNight = priceFromManager;
+    }
+}

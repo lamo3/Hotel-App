@@ -1,0 +1,7 @@
+public class Manager extends User{
+    
+    public Manager(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress) {
+        super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress);
+    }
+    
+}

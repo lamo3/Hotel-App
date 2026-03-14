@@ -1,1 +1,89 @@
-hi
+private String userId;
+    private String userJoiningDate;
+    private String userName;
+    private String userEmail;
+    private String userPhone;
+    private String userAddress;
+
+    public User(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress) {
+       setUserId(userId);
+       setUserJoiningDate(userJoiningDate);
+        setUserName(userName);
+       setUserEmail(userEmail);
+        setUserPhone(userPhone);
+        setUserAddress(userAddress);
+    }
+
+    
+    
+    
+    
+    public void setUserId(String userId) {
+        if((userId!=null)&&(!userId.equals("")&&(isDigit(userId))))
+        this.userId = userId;
+    }
+
+    public void setUserJoiningDate(String userJoiningDate) {
+        if((userJoiningDate!=null)&&(!userJoiningDate.equals("")))
+        this.userJoiningDate = userJoiningDate;
+    }
+
+    public void setUserName(String userName) {
+        if((userName!=null)&&(!userName.equals("")))
+        this.userName = userName;
+    }
+
+    public void setUserEmail(String userEmail) {
+        if((userEmail!=null)&(!userEmail.equals(""))&&(userEmail.contains("@")))
+        this.userEmail = userEmail;
+    }
+
+    public void setUserPhone(String userPhone) {
+        if((userPhone!=null)&&(!userPhone.equals(""))&&isDigit(userPhone))
+        this.userPhone = userPhone;
+    }
+
+    public void setUserAddress(String userAddress) {
+        if((userAddress!=null)&&(!userAddress.equals("")))
+        this.userAddress = userAddress;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getUserJoiningDate() {
+        return userJoiningDate;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+    
+    
+    
+    public boolean isDigit(String value){
+        for(int i=0;i<value.length();i++){
+            if(!Character.isDigit(value.charAt(0)))
+                return false;
+        }
+        return true;
+    }
+    
+    
+    
+    
+}
+

@@ -1,0 +1,17 @@
+public class Receptionist extends User {
+    
+    private Guest guest;
+    
+    
+    
+
+    public Receptionist(Guest guest, String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress) {
+        super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress);
+        this.guest = guest;
+        
+        
+    }
+    
+    
+    
+}

@@ -1,0 +1,98 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package hotelapp;
+
+/**
+ *
+ * @author lamyaalhamad
+ */
+public class Reservation extends Room{
+    private String ReservationID;
+    private String AssociatedGuestID;
+    private int CheckInDate;
+    private int CheckOutDate;
+    private int NumberOfGuests;
+    private String ReservationStatus;
+    private String SpecialRequests;
+    private String BookingDate;
+
+    public Reservation(String ReservationID, String AssociatedGuestID, int CheckInDate, int CheckOutDate, int NumberOfGuests, String ReservationStatus, String SpecialRequests, String BookingDate, String roomType, int floorNumber, String bedType) {
+        super(roomType, floorNumber, bedType);
+        this.ReservationID = ReservationID;
+        this.AssociatedGuestID = AssociatedGuestID;
+        this.CheckInDate = CheckInDate;
+        this.CheckOutDate = CheckOutDate;
+        this.NumberOfGuests = NumberOfGuests;
+        this.ReservationStatus = ReservationStatus;
+        this.SpecialRequests = SpecialRequests;
+        this.BookingDate = BookingDate;
+    }
+
+    public void setReservationID(String ReservationID) {
+        this.ReservationID = ReservationID;
+    }
+
+    public void setAssociatedGuestID(String AssociatedGuestID) {
+        this.AssociatedGuestID = AssociatedGuestID;
+    }
+
+    public void setCheckInDate(int CheckInDate) {
+        this.CheckInDate = CheckInDate;
+    }
+
+    public void setCheckOutDate(int CheckOutDate) {
+        this.CheckOutDate = CheckOutDate;
+    }
+
+    public void setNumberOfGuests(int NumberOfGuests) {
+        this.NumberOfGuests = NumberOfGuests;
+    }
+
+    public void setReservationStatus(String ReservationStatus) {
+        this.ReservationStatus = ReservationStatus;
+    }
+
+    public void setSpecialRequests(String SpecialRequests) {
+        this.SpecialRequests = SpecialRequests;
+    }
+
+    public void setBookingDate(String BookingDate) {
+        this.BookingDate = BookingDate;
+    }
+
+    public String getReservationID() {
+        return ReservationID;
+    }
+
+    public String getAssociatedGuestID() {
+        return AssociatedGuestID;
+    }
+
+    public int getCheckInDate() {
+        return CheckInDate;
+    }
+
+    public int getCheckOutDate() {
+        return CheckOutDate;
+    }
+
+    public int getNumberOfGuests() {
+        return NumberOfGuests;
+    }
+
+    public String getReservationStatus() {
+        return ReservationStatus;
+    }
+
+    public String getSpecialRequests() {
+        return SpecialRequests;
+    }
+
+    public String getBookingDate() {
+        return BookingDate;
+    }
+    
+    
+}

@@ -18,8 +18,6 @@ public class Room{
         setFloorNumber(floorNumber);
         setMaxOccupancy();
         
-        this.roomStatus = "Reserved";
-        
         //helps identify amenities available in each room type
         switch(this.roomType){
             case "Single":
@@ -187,6 +185,11 @@ public class Room{
 
     public String getBedType() {
         return bedType;
+    }
+
+    @Override
+    public String toString() {
+        return "Room number: " + roomNumber + "\nRoom Type" + roomType + "\nPrice per night: " + pricePerNight; 
     }
     
 }

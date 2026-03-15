@@ -28,6 +28,8 @@ public class Reservation extends Room{
         this.ReservationStatus = ReservationStatus;
         this.SpecialRequests = SpecialRequests;
         this.BookingDate = BookingDate;
+        
+        super.setRoomStatus("Reserved");
     }
 
     public void setReservationID(String ReservationID) {
@@ -94,5 +96,26 @@ public class Reservation extends Room{
         return BookingDate;
     }
     
-    
+    public void SearchAvailableRooms(int CheckInDate, int CheckOutDate, int guests, String roomType, Room [] rooms){
+        Reservation r;
+        for (Room room : rooms) {
+            if (room instanceof Reservation) {
+                r = (Reservation) room;
+                
+                if(CheckInDate == r.getCheckInDate() & CheckOutDate == r.getCheckOutDate() & (roomType == r.getRoomType() | guests == r.NumberOfGuests))
+                    continue;
+                else
+                    System.out.println(r);
+            }
+            
+            if(room.getRoomStatus() == "Available")
+                System.out.println(room);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\nCheck in date: " + CheckInDate + "\nCheck out date: " + CheckOutDate + "\nNumber of guests: " + NumberOfGuests + "\nReservation ID: " + ReservationID + "\nReservation status: " + ReservationStatus + "\nSpecial request: " + SpecialRequests; 
+    }
+     
 }

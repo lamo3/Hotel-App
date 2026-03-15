@@ -152,4 +152,41 @@ public class Room{
     public void setPricePerNight(double priceFromManager) {
         pricePerNight = priceFromManager;
     }
+
+    public static int getRoomCounter() {
+        return roomCounter;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public String getRoomType() {
+        return roomType;
+    }
+
+    public int getFloorNumber() {
+        return floorNumber;
+    }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public String getRoomStatus() {
+        return roomStatus;
+    }
+
+    public int getMaxOccupancy() {
+        return maxOccupancy;
+    }
+
+    public String[] getAmenities() {
+        return amenities;
+    }
+
+    public String getBedType() {
+        return bedType;
+    }
+    
 }

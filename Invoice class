@@ -1,0 +1,133 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package hotelapp;
+
+/**
+ *
+ * @author lamyaalhamad
+ */
+public class Invoice {
+
+    private String invoiceID;
+    private Reservation associatedReservation;
+    private String associatedReservationID;
+    private double roomCharges;
+    private String invoiceDate;
+    private Service associatedService;
+    private double serviceCharges;
+    private double taxAmount;
+    private double discountAmount;
+    private double totalAmount;
+    private String paymentStatus;
+    private String paymentMethod;
+
+    public Invoice(String invoiceID, Reservation associatedReservation, Service associatedService, double taxAmount, double discountAmount, double totalAmount, String paymentStatus, String paymentMethod) {
+        this.invoiceID = invoiceID;
+        this.associatedReservation = associatedReservation;
+        this.associatedService = associatedService;
+        this.taxAmount = taxAmount;
+        this.discountAmount = discountAmount;
+        this.totalAmount = totalAmount;
+        this.paymentStatus = paymentStatus;
+        this.paymentMethod = paymentMethod;
+    }
+
+    public void setInvoiceID(String invoiceID) {
+        this.invoiceID = invoiceID;
+    }
+
+    public void setAssociatedReservation(Reservation associatedReservation) {
+        this.associatedReservation = associatedReservation;
+    }
+
+    public void setAssociatedReservationID(String associatedReservationID) {
+        this.associatedReservationID = associatedReservationID;
+    }
+
+    public void setRoomCharges(double roomCharges) {
+        this.roomCharges = roomCharges;
+    }
+
+    public void setInvoiceDate(String invoiceDate) {
+        this.invoiceDate = invoiceDate;
+    }
+
+    public void setAssociatedService(Service associatedService) {
+        this.associatedService = associatedService;
+    }
+
+    public void setServiceCharges(double serviceCharges) {
+        this.serviceCharges = serviceCharges;
+    }
+
+    public void setTaxAmount(double taxAmount) {
+        this.taxAmount = taxAmount;
+    }
+
+    public void setDiscountAmount(double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getInvoiceID() {
+        return invoiceID;
+    }
+
+    public Reservation getAssociatedReservation() {
+        return associatedReservation;
+    }
+
+    public String getAssociatedReservationID() {
+        return associatedReservationID;
+    }
+
+    public double getRoomCharges() {
+        return roomCharges;
+    }
+
+    public String getInvoiceDate() {
+        return invoiceDate;
+    }
+
+    public Service getAssociatedService() {
+        return associatedService;
+    }
+
+    public double getServiceCharges() {
+        return serviceCharges;
+    }
+
+    public double getTaxAmount() {
+        return taxAmount;
+    }
+
+    public double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+}

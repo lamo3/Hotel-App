@@ -4,118 +4,258 @@
  */
 package hotelapp;
 
+import java.util.Arrays;
+
 /**
  *
  * @author lamyaalhamad
  */
 public class Reservation extends Room{
-    private String ReservationID;
-    private String AssociatedGuestID;
-    private int CheckInDate;
-    private int CheckOutDate;
-    private int NumberOfGuests;
-    private String ReservationStatus;
-    private String SpecialRequests;
-    private String BookingDate;
+    private String reservationID;
+    private String associatedGuestID;
+    private String checkInDate;
+    private String checkOutDate;
+    private int numberOfGuests;
+    private String reservationStatus;
+    private String specialRequests;
+    private String bookingDate;
+    private User user;
+    private Room room;
+    private static int reservationCounter;
 
-    public Reservation(String ReservationID, String AssociatedGuestID, int CheckInDate, int CheckOutDate, int NumberOfGuests, String ReservationStatus, String SpecialRequests, String BookingDate, String roomType, int floorNumber, String bedType) {
+    public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, String roomType, int floorNumber, String bedType) {
         super(roomType, floorNumber, bedType);
-        this.ReservationID = ReservationID;
-        this.AssociatedGuestID = AssociatedGuestID;
-        this.CheckInDate = CheckInDate;
-        this.CheckOutDate = CheckOutDate;
-        this.NumberOfGuests = NumberOfGuests;
-        this.ReservationStatus = ReservationStatus;
-        this.SpecialRequests = SpecialRequests;
-        this.BookingDate = BookingDate;
+        room.setRoomStatus("Reserved");
         
-        super.setRoomStatus("Reserved");
+        setReservationID();
+        setAssociatedGuestID(AssociatedGuestID);
+        setCheckInDate(checkInDate);
+        setCheckOutDate(checkOutDate);
+        setNumberOfGuests(NumberOfGuests);
+        setSpecialRequests(SpecialRequests);
+        setBookingDate(BookingDate);
+        reservationStatus = "Confirmed";
+        reservationCounter++;
+        
     }
 
-    public void setReservationID(String ReservationID) {
-        this.ReservationID = ReservationID;
+    public void setReservationID() {
+        this.reservationID = "R00" + reservationCounter;
     }
 
     public void setAssociatedGuestID(String AssociatedGuestID) {
-        this.AssociatedGuestID = AssociatedGuestID;
+        if(AssociatedGuestID == "" | AssociatedGuestID == null & AssociatedGuestID != user.getUserId() & user.getRole() != "Guest")
+            System.out.println("Invalid!");
+        else
+            associatedGuestID = AssociatedGuestID;
     }
 
-    public void setCheckInDate(int CheckInDate) {
-        this.CheckInDate = CheckInDate;
+    public void setCheckInDate(String CheckInDate) {
+        int day = Integer.parseInt(CheckInDate.substring(0, 2));
+        int month = Integer.parseInt(CheckInDate.substring(3, 5));
+        int year = Integer.parseInt(CheckInDate.substring(6, 10));
+        
+        if(year >= 2025){
+            switch(month){
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    if (day >= 1 & day <= 31) {
+                        checkInDate = CheckInDate;
+                    }
+                    break;
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    if (day >= 1 & day <= 30) {
+                        checkInDate = CheckInDate;
+                    }
+                    break;
+                case 2:
+                    if (day >= 1 & day <= 29) {
+                        checkInDate = CheckInDate;
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid!");
+            }
+        }
+
     }
 
-    public void setCheckOutDate(int CheckOutDate) {
-        this.CheckOutDate = CheckOutDate;
+    public void setCheckOutDate(String CheckOutDate) {
+        int day = Integer.parseInt(CheckOutDate.substring(0, 2));
+        int month = Integer.parseInt(CheckOutDate.substring(3, 5));
+        int year = Integer.parseInt(CheckOutDate.substring(6, 10));
+        
+        if (CheckOutDate.compareTo(checkInDate) > 0) {
+            if (year >= 2025) {
+                switch (month) {
+                    case 1:
+                    case 3:
+                    case 5:
+                    case 7:
+                    case 8:
+                    case 10:
+                    case 12:
+                        if (day >= 1 & day <= 31) {
+                            checkOutDate = CheckOutDate;
+                        }
+                        break;
+                    case 4:
+                    case 6:
+                    case 9:
+                    case 11:
+                        if (day >= 1 & day <= 30) {
+                            checkOutDate = CheckOutDate;
+                        }
+                        break;
+                    case 2:
+                        if (day >= 1 & day <= 29) {
+                            checkOutDate = CheckOutDate;
+                        }
+                        break;
+                    default:
+                        System.out.println("Invalid!");
+                }
+            }
+        }
+        
+        else
+            System.out.println("Invalid!");
     }
 
     public void setNumberOfGuests(int NumberOfGuests) {
-        this.NumberOfGuests = NumberOfGuests;
+        if(NumberOfGuests >= 1 & NumberOfGuests <= room.getMaxOccupancy())
+            numberOfGuests = NumberOfGuests;
+        else
+            System.out.println("Invalid!");
     }
 
+    //Used by receptionist
     public void setReservationStatus(String ReservationStatus) {
-        this.ReservationStatus = ReservationStatus;
+        switch (ReservationStatus) {
+            case "Confirmed":
+            case "Checked-Out":
+            case "Checked-in":
+            case "Cancelled":
+            case "No-Show":
+                reservationStatus = ReservationStatus;
+                break;
+            default:
+                System.out.println("Invalid!");
+        }
+            
     }
 
     public void setSpecialRequests(String SpecialRequests) {
-        this.SpecialRequests = SpecialRequests;
+        specialRequests = SpecialRequests;
     }
 
     public void setBookingDate(String BookingDate) {
-        this.BookingDate = BookingDate;
+        int day = Integer.parseInt(BookingDate.substring(0, 2));
+        int month = Integer.parseInt(BookingDate.substring(3, 5));
+        int year = Integer.parseInt(BookingDate.substring(6, 10));
+        
+        if(year >= 2025){
+            switch(month){
+                case 1:
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    if (day >= 1 & day <= 31) {
+                        bookingDate = BookingDate;
+                    }
+                    break;
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    if (day >= 1 & day <= 30) {
+                        bookingDate = BookingDate;
+                    }
+                    break;
+                case 2:
+                    if (day >= 1 & day <= 29) {
+                        bookingDate = BookingDate;
+                    }
+                    break;
+                default:
+                    System.out.println("Invalid!");
+            }
+        }
+        
+    }
+
+    public void setUser(User user) {
+        if(user != null)
+            this.user = user;
+        else
+            System.out.println("Invalid!");
+    }
+
+    public void setRoom(Room room) {
+        if(room != null)
+            this.room = room;
+        else
+            System.out.println("Invalid!");
     }
 
     public String getReservationID() {
-        return ReservationID;
+        return reservationID;
     }
 
     public String getAssociatedGuestID() {
-        return AssociatedGuestID;
+        return associatedGuestID;
     }
 
-    public int getCheckInDate() {
-        return CheckInDate;
+    public String getCheckInDate() {
+        return checkInDate;
     }
 
-    public int getCheckOutDate() {
-        return CheckOutDate;
+    public String getCheckOutDate() {
+        return checkOutDate;
     }
 
     public int getNumberOfGuests() {
-        return NumberOfGuests;
+        return numberOfGuests;
     }
 
     public String getReservationStatus() {
-        return ReservationStatus;
+        return reservationStatus;
     }
 
     public String getSpecialRequests() {
-        return SpecialRequests;
+        return specialRequests;
     }
 
     public String getBookingDate() {
-        return BookingDate;
+        return bookingDate;
     }
-    
-    public void SearchAvailableRooms(int CheckInDate, int CheckOutDate, int guests, String roomType, Room [] rooms){
-        Reservation r;
-        for (Room room : rooms) {
-            if (room instanceof Reservation) {
-                r = (Reservation) room;
-                
-                if(CheckInDate == r.getCheckInDate() & CheckOutDate == r.getCheckOutDate() & (roomType == r.getRoomType() | guests == r.NumberOfGuests))
-                    continue;
-                else
-                    System.out.println(r);
-            }
-            
-            if(room.getRoomStatus() == "Available")
-                System.out.println(room);
-        }
+
+    public User getUser() {
+        return user;
+    }
+
+    public static int getReservationCounter() {
+        return reservationCounter;
+    }
+
+    public Room getRoom() {
+        return room;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\nCheck in date: " + CheckInDate + "\nCheck out date: " + CheckOutDate + "\nNumber of guests: " + NumberOfGuests + "\nReservation ID: " + ReservationID + "\nReservation status: " + ReservationStatus + "\nSpecial request: " + SpecialRequests; 
+        return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests; 
     }
-     
+    
 }

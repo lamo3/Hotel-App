@@ -1,0 +1,143 @@
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class FeedBack {
+    Scanner input=new Scanner(System.in);
+    private String feedBackId;
+    private String associatedGuestId;
+    private String associatedReservationId;
+    private int rating;
+    private String comments; //optional 
+    private String submissionDate;
+    private String response;//optional by manager
+    private static int count=1;
+
+    public FeedBack(String feedBackId, String associatedGuestId, String associatedReservationId, int rating, String submissionDate) { 
+        this.feedBackId = feedBackId;
+        this.associatedGuestId = associatedGuestId;
+        this.associatedReservationId = associatedReservationId;
+        this.rating = rating;
+        this.submissionDate = submissionDate;
+    }
+
+    
+    
+    public FeedBack(String feedBackId, String associatedGuestId, String associatedReservationId, int rating, String comments, String submissionDate) {
+        this.feedBackId = feedBackId;
+        this.associatedGuestId = associatedGuestId;
+        this.associatedReservationId = associatedReservationId;
+        this.rating = rating;
+        this.comments = comments;
+        this.submissionDate = submissionDate;
+    }
+
+    
+    
+    public void setFeedBackId(String feedBackId) {
+        if((feedBackId!=null)&&(!feedBackId.equals("")))
+        this.feedBackId = feedBackId;
+    }
+
+    public void setAssociatedGuestId(String associatedGuestId) {
+        if((associatedGuestId!=null)&&(!associatedGuestId.equals("")))
+        this.associatedGuestId = associatedGuestId;
+    }
+
+    public void setAssociatedReservationId(String associatedReservationId) {
+        if((associatedReservationId!=null)&&(!associatedReservationId.equals("")))
+        this.associatedReservationId = associatedReservationId;
+    }
+
+    public void setRating(int rating) {
+        if(rating>0&&rating<6)
+        this.rating = rating;
+    }
+
+    public void setComments(String comments) {
+        if((comments!=null)&&(!comments.equals("")))
+        this.comments = comments;
+    }
+
+    public void setSubmissionDate(String submissionDate) {
+      if(submissionDate!=null)
+        this.submissionDate = submissionDate;
+    }
+
+    public void setResponse(String response) {
+        if((response!=null)&&(!response.equals("")))
+        this.response = response;
+    }
+
+    public String getFeedBackId() {
+        return feedBackId;
+    }
+
+    public String getAssociatedGuestId() {
+        return associatedGuestId;
+    }
+
+    public String getAssociatedReservationId() {
+        return associatedReservationId;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public String getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+    
+    
+    
+    public FeedBack submitGuestFeedback(Guest guest){
+        Reservation r=guest.getGuestReservation();
+        if(r.getReservationStatus().equals("Checked-Out")){
+            String feedbackId="FI"+count;
+            count++;
+            System.out.println("--------------------------------------------------------------");
+            System.out.println("Please enter your rating number : ");
+            this.rating=input.nextInt();
+            System.out.println("Please enter your comments : ");
+            this.comments=input.nextLine();
+            
+            return new FeedBack(feedbackId,guest.getUserId(),r.getAssociatedGuestID(),this.rating,this.comments,LocalDate.now().toString());
+            
+        }
+        
+        return null;
+    }
+    
+    public void responedToGuestFeedBack(Manager manager,Guest guest){
+        FeedBack guestFeedBack=guest.getGuestFeedBack();
+        System.out.println("Guest information and feedback : ");
+        System.out.println(" Guest Name : "+ guest.getUserName());
+        System.out.println("Guest Id : "+guest.getUserId());
+        System.out.println(" *** Guest FeedBack *** ");
+        System.out.println("FeedBack Id : "+guestFeedBack.getFeedBackId());
+        System.out.println("Rating : "+guestFeedBack.getRating());
+        System.out.println("Comments : "+guestFeedBack.getComments());
+        System.out.println("Submission Date : "+guestFeedBack.getSubmissionDate());
+        System.out.println("Please enter your response : ");
+        String managerResponse=input.nextLine();
+        
+        guestFeedBack.setResponse(managerResponse);
+        
+        
+    }
+    
+    
+    
+   
+    
+}

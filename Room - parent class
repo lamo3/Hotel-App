@@ -1,9 +1,9 @@
 
 package hotelapp;
 
-public class Room{
+public class Room implements Comparable<Room>{
     private static int roomCounter; //helps identify room number
-    private int roomNumber;
+    private String roomNumber;
     private String roomType;
     private int floorNumber;
     private double pricePerNight;
@@ -73,12 +73,10 @@ public class Room{
 
     //make sure the room number stays within 1-20
     public void setRoomNumber() {
-        while(this.roomNumber == 0){
-            if(roomCounter > 0 & roomCounter < 21)
-                this.roomNumber = roomCounter;
-            else
-                roomCounter = 0;
-        }
+        if(roomCounter >=1 & roomCounter <= 20)
+            roomNumber = "" + floorNumber + roomCounter;
+        else if(roomCounter > 20)
+            roomNumber = "" + floorNumber + (roomCounter%20);
     }
 
     // makes sure the room type selected is valid
@@ -155,7 +153,7 @@ public class Room{
         return roomCounter;
     }
 
-    public int getRoomNumber() {
+    public String getRoomNumber() {
         return roomNumber;
     }
 
@@ -192,4 +190,13 @@ public class Room{
         return "Room number: " + roomNumber + "\nRoom Type" + roomType + "\nPrice per night: " + pricePerNight; 
     }
     
+    @Override
+    public int compareTo(Room other){
+        if(other.getPricePerNight() > this.getPricePerNight())
+            return -1;
+        else if(other.getPricePerNight() < this.getPricePerNight())
+            return 1;
+        else
+            return 0;
+    }
 }

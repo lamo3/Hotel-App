@@ -65,7 +65,7 @@ public abstract class User {
     }
 
     public void setRole(String role) {
-        switch(role){
+        switch (role) {
             case "Guest":
             case "Receptionist":
             case "Manager":
@@ -111,6 +111,11 @@ public abstract class User {
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User ID: " + userId + "\nJoin Date: " + userJoiningDate + "\nName: " + userName + "\nEmail: " + userEmail + "\nPhone number: " + userPhone + "\nAdress: " + userAddress + "\nRole: " + role;
     }
 
 }

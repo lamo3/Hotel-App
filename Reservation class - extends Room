@@ -4,13 +4,15 @@
  */
 package hotelapp;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  *
  * @author lamyaalhamad
  */
-public class Reservation extends Room{
+public class Reservation implements Comparable<Reservation> {
+
     private String reservationID;
     private String associatedGuestID;
     private String checkInDate;
@@ -23,10 +25,10 @@ public class Reservation extends Room{
     private Room room;
     private static int reservationCounter;
 
-    public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, String roomType, int floorNumber, String bedType) {
-        super(roomType, floorNumber, bedType);
+    public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, Room room) {
+
         room.setRoomStatus("Reserved");
-        
+
         setReservationID();
         setAssociatedGuestID(AssociatedGuestID);
         setCheckInDate(checkInDate);
@@ -36,7 +38,7 @@ public class Reservation extends Room{
         setBookingDate(BookingDate);
         reservationStatus = "Confirmed";
         reservationCounter++;
-        
+
     }
 
     public void setReservationID() {
@@ -44,19 +46,20 @@ public class Reservation extends Room{
     }
 
     public void setAssociatedGuestID(String AssociatedGuestID) {
-        if(AssociatedGuestID == "" | AssociatedGuestID == null & AssociatedGuestID != user.getUserId() & user.getRole() != "Guest")
-            System.out.println("Invalid!");
-        else
+        if (AssociatedGuestID == "" | AssociatedGuestID == null & AssociatedGuestID != user.getUserId() & user.getRole() != "Guest") {
+            System.out.println("Invalid guest ID!");
+        } else {
             associatedGuestID = AssociatedGuestID;
+        }
     }
 
     public void setCheckInDate(String CheckInDate) {
         int day = Integer.parseInt(CheckInDate.substring(0, 2));
         int month = Integer.parseInt(CheckInDate.substring(3, 5));
         int year = Integer.parseInt(CheckInDate.substring(6, 10));
-        
-        if(year >= 2025){
-            switch(month){
+
+        if (year >= 2025) {
+            switch (month) {
                 case 1:
                 case 3:
                 case 5:
@@ -82,7 +85,7 @@ public class Reservation extends Room{
                     }
                     break;
                 default:
-                    System.out.println("Invalid!");
+                    System.out.println("Invalid check in date!");
             }
         }
 
@@ -92,7 +95,7 @@ public class Reservation extends Room{
         int day = Integer.parseInt(CheckOutDate.substring(0, 2));
         int month = Integer.parseInt(CheckOutDate.substring(3, 5));
         int year = Integer.parseInt(CheckOutDate.substring(6, 10));
-        
+
         if (CheckOutDate.compareTo(checkInDate) > 0) {
             if (year >= 2025) {
                 switch (month) {
@@ -121,20 +124,20 @@ public class Reservation extends Room{
                         }
                         break;
                     default:
-                        System.out.println("Invalid!");
+                        System.out.println("Invalid check out date!");
                 }
             }
-        }
-        
-        else
+        } else {
             System.out.println("Invalid!");
+        }
     }
 
     public void setNumberOfGuests(int NumberOfGuests) {
-        if(NumberOfGuests >= 1 & NumberOfGuests <= room.getMaxOccupancy())
+        if (NumberOfGuests >= 1 & NumberOfGuests <= room.getMaxOccupancy()) {
             numberOfGuests = NumberOfGuests;
-        else
-            System.out.println("Invalid!");
+        } else {
+            System.out.println("Invalid number of guests!");
+        }
     }
 
     //Used by receptionist
@@ -148,9 +151,9 @@ public class Reservation extends Room{
                 reservationStatus = ReservationStatus;
                 break;
             default:
-                System.out.println("Invalid!");
+                System.out.println("Invalid reservation status!");
         }
-            
+
     }
 
     public void setSpecialRequests(String SpecialRequests) {
@@ -161,9 +164,9 @@ public class Reservation extends Room{
         int day = Integer.parseInt(BookingDate.substring(0, 2));
         int month = Integer.parseInt(BookingDate.substring(3, 5));
         int year = Integer.parseInt(BookingDate.substring(6, 10));
-        
-        if(year >= 2025){
-            switch(month){
+
+        if (year >= 2025) {
+            switch (month) {
                 case 1:
                 case 3:
                 case 5:
@@ -189,24 +192,26 @@ public class Reservation extends Room{
                     }
                     break;
                 default:
-                    System.out.println("Invalid!");
+                    System.out.println("Invalid booking date!");
             }
         }
-        
+
     }
 
     public void setUser(User user) {
-        if(user != null)
+        if (user != null) {
             this.user = user;
-        else
-            System.out.println("Invalid!");
+        } else {
+            System.out.println("Invalid user!");
+        }
     }
 
     public void setRoom(Room room) {
-        if(room != null)
+        if (room != null) {
             this.room = room;
-        else
-            System.out.println("Invalid!");
+        } else {
+            System.out.println("Invalid room!");
+        }
     }
 
     public String getReservationID() {
@@ -255,7 +260,18 @@ public class Reservation extends Room{
 
     @Override
     public String toString() {
-        return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests; 
+        return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests;
     }
-    
+
+    @Override
+    public int compareTo(Reservation other) {
+        if (other.getRoom().getPricePerNight() > this.getRoom().getPricePerNight()) {
+            return -1;
+        } else if (other.getRoom().getPricePerNight() < this.getRoom().getPricePerNight()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
 }

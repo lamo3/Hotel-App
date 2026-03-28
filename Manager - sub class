@@ -1,7 +1,191 @@
-public class Manager extends User{
-    
-    public Manager(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress) {
-        super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress);
+
+import hotelapp.Invoice;
+import hotelapp.Reservation;
+import hotelapp.Room;
+import hotelapp.Service;
+import hotelapp.User;
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class Manager extends User {
+
+    public Manager(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
+        super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
-    
+
+    public void GenerateRevenueReports(LinkedList<Invoice> invoices, LinkedList<Room> rooms, LinkedList<Service> services) {
+        System.out.println("--- Revenue Report ---");
+
+        double revenue = 0;
+        for (Invoice invoice : invoices) {
+            if (invoice.getPaymentStatus() == "Paid") {
+                revenue += invoice.getTotalAmount();
+            }
+        }
+        System.out.println("Total revenue: " + revenue + "$");
+
+        int occupancy = 0;
+        for (Room room : rooms) {
+            if (room.getRoomStatus() == "Occupied") {
+                occupancy += 1;
+            }
+        }
+        double occupancyRate = (occupancy / Room.getRoomCounter()) * 100;
+        System.out.println("Occupancy Rate: " + occupancyRate);
+
+        int roomService = 0;
+        double roomServicePrice = 0;
+        int laundry = 0;
+        double laundryPrice = 0;
+        int spa = 0;
+        double spaPrice = 0;
+        int airportShuttle = 0;
+        double airportShuttlePrice = 0;
+        for (Service service : services) {
+            if (service.getServiceName() == "Room Service") {
+                roomService++;
+                roomServicePrice += service.getPrice();
+            } else if (service.getServiceName() == "Laundry") {
+                laundry++;
+                laundryPrice += service.getPrice();
+            } else if (service.getServiceName() == "Spa") {
+                spa++;
+                spaPrice += service.getPrice();
+            } else if (service.getServiceName() == "Airport Shuttle") {
+                airportShuttle++;
+                airportShuttlePrice += service.getPrice();
+            }
+        }
+        System.out.println("Service Usage: \n\t1.Room Service: \n\t\tNo. of people that ordered it: " + roomService + "\n\t\tTotal Revenue: " + roomServicePrice + "$");
+        System.out.println("\t2.Laundry: \n\t\tNo. of people that ordered it: " + laundry + "\n\t\tTotal Revenue: " + laundryPrice + "$");
+        System.out.println("\t3.Spa: \n\t\tNo. of people that ordered it: " + spa + "\n\t\tTotal Revenue: " + spaPrice + "$");
+        System.out.println("\t4.Airport Shuttle: \n\t\tNo. of people that ordered it: " + airportShuttle + "\n\t\tTotal Revenue: " + airportShuttlePrice + "$");
+
+        int i = 0;
+        System.out.println("Outstanding Payments:\n");
+        for (Invoice invoice : invoices) {
+            System.out.println("Payment + " + (i++) + ":");
+            if (invoice.getPaymentStatus() == "Unpaid") {
+                System.out.println(invoice);
+            }
+        }
+
+    }
+
+    public void ManageRoomInventory(LinkedList<Room> rooms) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.println("Would you like to (Enter a number): \n1.Add a new room? \n2.Update room details? \n3.Remove a room?");
+        int choice = in.nextInt();
+
+        switch (choice) {
+            case 1:
+                System.out.print("Enter the following: \nRoom Type: ");
+                String roomType = in.nextLine();
+                System.out.print("\nFloor Number: ");
+                int floorNumber = in.nextInt();
+                System.out.println("\nBed Type: ");
+                String bedType = in.nextLine();
+                rooms.add(new Room(roomType, floorNumber, bedType));
+                break;
+            case 2:
+                System.out.println("Which room would you like to update? (Enter the room number)");
+                for (Room room1 : rooms) {
+                    System.out.println(room1);
+                }
+                String roomNumber = in.nextLine();
+
+                for (Room room1 : rooms) {
+                    if (roomNumber == room1.getRoomNumber()) {
+                        System.out.println("What would you like to update? (Enter a number)\n1.Price \n2.Amenities \n3.Bed Type");
+                        int choice1 = in.nextInt();
+                        switch (choice1) {
+                            case 1:
+                                System.out.print("Enter the price: ");
+                                double price = in.nextDouble();
+                                room1.setPricePerNight(price);
+                                break;
+                            case 2:
+                                String[] amenities = new String[4];
+                                System.out.print("Enter the Amenities: \n1. ");
+                                String amenities1 = in.nextLine();
+                                int i = 0;
+                                while (amenities1 == null | amenities1 == "") {
+                                    amenities[i] = amenities1;
+                                    i++;
+                                    System.out.print((i + 1) + ". ");
+                                    amenities1 = in.nextLine();
+                                }
+                                room1.setAmenities(amenities);
+                                break;
+                            case 3:
+                                System.out.print("Enter the bed type: ");
+                                String bedType1 = in.nextLine();
+                                room1.setBedType(bedType1);
+                            default:
+                                System.out.println("Invalid choice!");
+                        }
+                    }
+                }
+                break;
+            case 3:
+                System.out.println("Which room would you like to remove? (Enter the room number)");
+                for (Room room1 : rooms) {
+                    System.out.println(room1);
+                }
+                String roomNumber1 = in.nextLine();
+
+                for (Room room1 : rooms) {
+                    if (roomNumber1 == room1.getRoomNumber()) {
+                        rooms.remove(room1);
+                    }
+                }
+
+                break;
+            default:
+                System.out.println("Invalid choice!");
+        }
+    }
+
+    public void UpdateRoomPricing(LinkedList<Room> rooms) {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Which room type? (enter a number) \n1. Single \n2. Double \n3. Suite \n4. Deluxe");
+        int choice = in.nextInt();
+        System.out.print("Enter the price change for this room type: ");
+        double price = in.nextDouble();
+
+        switch (choice) {
+            case 1:
+                for (Room rooms1 : rooms) {
+                    if (rooms1.getRoomType() == "Single") {
+                        rooms1.setPricePerNight(price);
+                    }
+                }
+                break;
+            case 2:
+                for (Room rooms1 : rooms) {
+                    if (rooms1.getRoomType() == "Double") {
+                        rooms1.setPricePerNight(price);
+                    }
+                }
+                break;
+            case 3:
+                for (Room rooms1 : rooms) {
+                    if (rooms1.getRoomType() == "Suite") {
+                        rooms1.setPricePerNight(price);
+                    }
+                }
+                break;
+            case 4:
+                for (Room rooms1 : rooms) {
+                    if (rooms1.getRoomType() == "Deluxe") {
+                        rooms1.setPricePerNight(price);
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid choice!");
+        }
+    }
+
 }

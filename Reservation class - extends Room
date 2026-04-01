@@ -23,6 +23,10 @@ public class Reservation implements Comparable<Reservation> {
     private String bookingDate;
     private User user;
     private Room room;
+    private Invoice invoice;
+    private ArrayList<Service> services;
+    private static ArrayList<Service> allServices;
+    private static ArrayList<Invoice> allInvoices;
     private static int reservationCounter;
 
     public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, Room room) {
@@ -39,6 +43,8 @@ public class Reservation implements Comparable<Reservation> {
         reservationStatus = "Confirmed";
         reservationCounter++;
 
+        invoice = new Invoice(reservationID, AssociatedGuestID, room.getPricePerNight(), CheckInDate, CheckOutDate, services);
+        allInvoices.add(invoice);
     }
 
     public void setReservationID() {
@@ -256,6 +262,10 @@ public class Reservation implements Comparable<Reservation> {
 
     public Room getRoom() {
         return room;
+    }
+
+    public Invoice getInvoice() {
+        return invoice;
     }
 
     @Override

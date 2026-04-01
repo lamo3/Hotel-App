@@ -16,8 +16,7 @@ public class Guest extends User {
 
     private ArrayList<Service> guestService;
     private Reservation guestReservation;
-    private Invoice guestInvoice;
-
+    
     public Guest(ArrayList<Service> guestService, Reservation guestReservation, String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
         this.guestService = guestService;
@@ -97,7 +96,7 @@ public class Guest extends User {
 
     }
 
-    public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, String roomType, LinkedList<Room> rooms, LinkedList<Reservation> reservations) {
+    public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, String roomType, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
 
         Collections.sort(rooms);
         int count = 0;
@@ -131,23 +130,23 @@ public class Guest extends User {
     }
 
     public void ViewInvoice() {
-        System.out.println(guestInvoice.toString());
+        System.out.println(guestReservation.getInvoice());
     }
 
     public void MakeAPayment() {
-        if (guestInvoice.getPaymentStatus() == "Unpaid") {
+        if (guestReservation.getInvoice().getPaymentStatus() == "Unpaid") {
             System.out.print("Choose a payment method: \n1.Cash \n2.Card \n3.Online Transfer");
             int paymentChoice = input.nextInt();
 
             switch (paymentChoice) {
                 case 1:
-                    guestInvoice.setPaymentMethod("Cash");
+                    guestReservation.getInvoice().setPaymentMethod("Cash");
                     break;
                 case 2:
-                    guestInvoice.setPaymentMethod("Card");
+                    guestReservation.getInvoice().setPaymentMethod("Card");
                     break;
                 case 3:
-                    guestInvoice.setPaymentMethod("Online Transfer");
+                    guestReservation.getInvoice().setPaymentMethod("Online Transfer");
                     break;
                 default:
                     System.out.println("Invalid payment method!");
@@ -156,8 +155,8 @@ public class Guest extends User {
             System.out.print("How much would you like to pay?");
             double payment = input.nextDouble();
 
-            while (payment < 0 | payment > guestInvoice.getTotalAmount()) {
-                if (payment > guestInvoice.getTotalAmount()) {
+            while (payment < 0 | payment > guestReservation.getInvoice().getTotalAmount()) {
+                if (payment > guestReservation.getInvoice().getTotalAmount()) {
                     System.out.println("That exceeds your bills!");
                 } else {
                     System.out.println("That is an invalid amount!");
@@ -167,10 +166,10 @@ public class Guest extends User {
                 payment = input.nextDouble();
             }
 
-            if (payment == guestInvoice.getTotalAmount()) {
-                guestInvoice.setPaymentStatus("Paid");
-            } else if (payment < guestInvoice.getTotalAmount() & payment > 0) {
-                guestInvoice.setPaymentStatus("Partially Paid");
+            if (payment == guestReservation.getInvoice().getTotalAmount()) {
+                guestReservation.getInvoice().setPaymentStatus("Paid");
+            } else if (payment < guestReservation.getInvoice().getTotalAmount() & payment > 0) {
+                guestReservation.getInvoice().setPaymentStatus("Partially Paid");
             }
 
             System.out.println("Payment succefull!");

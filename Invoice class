@@ -4,6 +4,8 @@
  */
 package hotelapp;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author lamyaalhamad
@@ -11,74 +13,52 @@ package hotelapp;
 public class Invoice {
 
     private String invoiceID;
-    private Reservation associatedReservation;
     private String associatedReservationID;
+    private String associatedGuestID;
     private double roomCharges;
     private String invoiceDate;
-    private Service associatedService;
     private double serviceCharges;
     private double taxAmount;
     private double discountAmount;
     private double totalAmount;
     private String paymentStatus;
     private String paymentMethod;
-    private User user;
     private static int invoiceCounter;
 
-    public Invoice(Reservation associatedReservation, Service associatedService, String paymentMethod, User user, boolean discount) {
+    public Invoice(String reservationID, double price, String checkInDate, String checkOutDate, ArrayList<Service> services, String guestID) {
+        invoiceCounter++;
+        
         setInvoiceID();
-        setAssociatedReservation(associatedReservation);
-        setAssociatedReservationID();
-        setRoomCharges();
-        setInvoiceDate();
-        setAssociatedService(associatedService);
-        setServiceCharges();
+        associatedReservationID = reservationID;
+        setRoomCharges(price, checkInDate, checkOutDate);
+        setInvoiceDate(checkOutDate);
+        setServiceCharges(services);
         setTaxAmount();
         setTotalAmount();
         paymentStatus = "Unpaid";
-        setPaymentMethod(paymentMethod);
-        setDiscountAmount(discount);
-        
-        invoiceCounter++;
+        associatedGuestID = guestID;
     }
 
     public void setInvoiceID() {
         this.invoiceID = "IV00" + invoiceCounter;
     }
 
-    public void setAssociatedReservation(Reservation associatedReservation) {
-        if(associatedReservation.getUser().getUserId() == user.getUserId() & user.getRole() == "Guest" & associatedReservation != null)
-            this.associatedReservation = associatedReservation;
-        else
-            System.out.println("Invalid reservation!");
-    }
-
-    public void setAssociatedReservationID() {
-        associatedReservationID = associatedReservation.getReservationID();
-    }
-
-    public void setRoomCharges() {
-        int checkInDay = Integer.parseInt(associatedReservation.getCheckInDate().substring(0, 3));
-        int checkOutDay = Integer.parseInt(associatedReservation.getCheckOutDate().substring(0, 3));
+    public void setRoomCharges(double price, String checkInDate, String checkOutDate) {
+         int checkInDay = Integer.parseInt(checkInDate.substring(0, 3));
+        int checkOutDay = Integer.parseInt(checkOutDate.substring(0, 3));
         int numberOfDays = checkOutDay - checkInDay;
         
-        roomCharges = associatedReservation.getRoom().getPricePerNight()*numberOfDays;
+        roomCharges = price*numberOfDays;
     }
 
-    public void setInvoiceDate() {
-        invoiceDate = associatedReservation.getCheckOutDate();
+    public void setInvoiceDate(String checkOutDate) {
+        this.invoiceDate = checkOutDate;
     }
 
-    public void setAssociatedService(Service associatedService) {
-        if(associatedService.getReservationId() == associatedReservationID & associatedService != null)
-            this.associatedService = associatedService;
-        else
-            System.out.println("Invalid Service!");
-        
-    }
-
-    public void setServiceCharges() {
-        serviceCharges = associatedService.getPrice();
+    public void setServiceCharges(ArrayList<Service> services) {
+        for(Service service: services){
+            serviceCharges += service.getPrice();
+        }
     }
 
     public void setTaxAmount() {
@@ -95,7 +75,7 @@ public class Invoice {
     }
 
     public void setTotalAmount() {
-        totalAmount = roomCharges+serviceCharges+taxAmount;
+        totalAmount = roomCharges+serviceCharges+taxAmount-discountAmount;
     }
 
     public void setPaymentStatus(String paymentStatus) {
@@ -126,12 +106,12 @@ public class Invoice {
         return invoiceID;
     }
 
-    public Reservation getAssociatedReservation() {
-        return associatedReservation;
-    }
-
     public String getAssociatedReservationID() {
         return associatedReservationID;
+    }
+
+    public String getAssociatedGuestID() {
+        return associatedGuestID;
     }
 
     public double getRoomCharges() {
@@ -140,10 +120,6 @@ public class Invoice {
 
     public String getInvoiceDate() {
         return invoiceDate;
-    }
-
-    public Service getAssociatedService() {
-        return associatedService;
     }
 
     public double getServiceCharges() {
@@ -170,10 +146,12 @@ public class Invoice {
         return paymentMethod;
     }
 
-    @Override
-    public String toString() {
-        return "Invoice ID: " + invoiceID + "\nReservation ID: " + associatedReservationID + "\nGuest ID: " + user.getUserId() + "\nRoom charges: " + roomCharges + "\nService charges: " + serviceCharges + "\nTax amount (15%): " + taxAmount + "\nDiscount amount (10%): " + discountAmount + "\nTotal amount: " + totalAmount + "\nPayment status: " + paymentStatus + "\nPayment method: " + paymentMethod;
+    public static int getInvoiceCounter() {
+        return invoiceCounter;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Invoice ID: " + invoiceID + "\nReservation ID: " + associatedReservationID + "\nGuest ID: " + associatedGuestID + "\nRoom charges: " + roomCharges + "\nService charges: " + serviceCharges + "\nTax amount (15%): " + taxAmount + "\nDiscount amount (10%): " + discountAmount + "\nTotal amount: " + totalAmount + "\nPayment status: " + paymentStatus + "\nPayment method: " + paymentMethod;
+    }
 }

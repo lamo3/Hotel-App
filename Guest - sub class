@@ -1,102 +1,102 @@
 package hotelapp;
 
-import hotelapp.Reservation;
-import hotelapp.Room;
-import hotelapp.Service;
-import hotelapp.User;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Arrays;
+import hotel1.Reservation;
+import hotel1.Room;
+import hotel1.Service;
+import hotel1.User;
 import java.util.Collections;
-import java.util.LinkedList;
+
 
 public class Guest extends User {
-
-    Scanner input = new Scanner(System.in);
-
-    private ArrayList<Service> guestService;
-    private Reservation guestReservation;
     
-    public Guest(ArrayList<Service> guestService, Reservation guestReservation, String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
+    Scanner input=new Scanner(System.in);
+   
+    
+  
+    private ArrayList<Reservation> guestReservation=new ArrayList();//Guest may have old reservation.
+
+    public Guest(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
-        this.guestService = guestService;
-        this.guestReservation = guestReservation;
     }
 
-    public ArrayList<Service> getGuestService() {
-        return guestService;
-
-    }
-
-    public void setGuestService(ArrayList<Service> guestService) {
-        this.guestService = guestService;
-    }
-
-    public Reservation getGuestReservation() {
+    
+  
+    public ArrayList<Reservation> getGuestReservation() {
         return guestReservation;
     }
-
-    public void setGuestReservation(Reservation guestReservation) {
-        this.guestReservation = guestReservation;
+    
+    
+    public void addReservation(Reservation reservation){
+        guestReservation.add(reservation);
     }
-
-    public void updateupdateContactInfo() {
-        System.out.println("--------------------------------------------------------------");
-        System.out.println("--- Welcome to the Guest Information Update Center --- ");
-
+   
+    
+    
+    
+    public void updateupdateContactInfo(){
+        System.out.println("--------------------------------------------------------------\n");
+       
+        System.out.println(" --- Welcome to the Guest Information Update Center --- ");
+      
         System.out.println(" Please select the specific infomation you would like to upadte.  ");
         System.out.println(" 1- Email ");
         System.out.println(" 2- Phone Number ");
         System.out.println(" 3- Address ");
         System.out.println(" 4- Updare All Information ");
-
-        String selection = input.nextLine();
-
-        switch (selection) {
-
-            case "Email":
+        
+       int selection=input.nextInt();
+       
+        switch(selection){
+            
+            case 1:
                 System.out.println(" Kindly enter the email you wish to update. ");
-                String updatedEmail = input.nextLine();
-
+                String updatedEmail=input.nextLine();
+                
                 super.setUserEmail(updatedEmail);
                 System.out.println(" *** email has been successfully updated ***");
                 break;
-            case "Phone Number":
+            case 2:
                 System.out.println(" Kindly enter the phone number you wish to update. ");
-                String updatedPhoneNumber = input.nextLine();
+                String updatedPhoneNumber=input.nextLine();
                 super.setUserPhone(updatedPhoneNumber);
                 System.out.println(" *** phone number has been successfully updated *** ");
                 break;
-            case "Address":
+            case 3:
                 System.out.println(" Kindly enter the address you wish to update. ");
-                String updatedAddress = input.nextLine();
+                String updatedAddress=input.nextLine();
                 super.setUserAddress(updatedAddress);
                 System.out.println(" *** address has been successfully updated *** ");
                 break;
-            case "Update All Information":
-                String[] updateAll = new String[3];
-                System.out.println(" Kindly enter the email you wish to update. ");
-                updateAll[0] = input.nextLine();
-                super.setUserEmail(updateAll[0]);
-                System.out.println(" Kindly enter the phone number you wish to update. ");
-                updateAll[1] = input.nextLine();
-                super.setUserPhone(updateAll[1]);
-                System.out.println(" Kindly enter the address you wish to update. ");
-                updateAll[2] = input.nextLine();
-                super.setUserAddress(updateAll[2]);
-                System.out.println(" *** All information has been successfully updated *** ");
-                break;
-            default:
-                System.out.println(" Sorry. The option you entered is not available! ");
-                break;
-
+            case 4:
+                    String[]updateAll=new String[3];
+                    System.out.println(" Kindly enter the email you wish to update. ");
+                    updateAll[0]=input.nextLine();
+                    super.setUserEmail(updateAll[0]);
+                    System.out.println(" Kindly enter the phone number you wish to update. ");
+                    updateAll[1]=input.nextLine();
+                    super.setUserPhone(updateAll[1]);
+                    System.out.println(" Kindly enter the address you wish to update. ");
+                    updateAll[2]=input.nextLine();
+                    super.setUserAddress(updateAll[2]);
+                    System.out.println(" *** All information has been successfully updated *** ");
+                    break;
+                    default:
+                        System.out.println(" Sorry. The option you entered is not available! ");
+                        break;
+                      
         }
-        System.out.println(" We are happy to serve you. Have a nice day! ");
-        System.out.println("--------------------------------------------------------------");
-
+          System.out.println(" We are happy to serve you. Have a nice day! ");
+         System.out.println("--------------------------------------------------------------");
+        
     }
-
-    public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, String roomType, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
+    
+    
+    // lamia methods 
+    
+   public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, String roomType, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
 
         Collections.sort(rooms);
         int count = 0;
@@ -177,3 +177,9 @@ public class Guest extends User {
         }
     }
 }
+    
+    
+    
+}
+
+    

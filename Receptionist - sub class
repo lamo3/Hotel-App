@@ -8,9 +8,9 @@ import java.util.Scanner;
 
 public class Receptionist extends User {
 
-    public Receptionist(Guest guest, String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
+    public Receptionist( String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
-        this.guest = guest;
+        
     }
 
     public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {

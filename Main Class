@@ -1,1 +1,100 @@
+mport java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+
+public class Hotel1 {
+
+   
+    static int countF=1;
+    static ArrayList<Guest>guest;
+    static ArrayList<Reservation>reservation;
+    static ArrayList<Room>room;
+    static Scanner input=new Scanner(System.in);
+    public static void main(String[] args) {
+       
+        
+        
+       
+        
+        
+        
+        
+       
+        
+        
+            }
+   
+  
+    public static void viewHotalStatistics(){
+        System.out.println("Total number of rooms : "+ room.size());
+        System.out.println("Total number of Reservation : "+reservation.size());
+        System.out.println(" Total number of guests : "+guest.size());
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("Rooms by status : ");
+        int statuAvailableCount=0;
+        int statuOccupiedCount=0;
+        int statuUnderMaintenanceCount=0;
+        int statuReservedCount=0;
+        for(Room r:room){
+         switch(r.getRoomStatus()){
+             case "Available":
+                 statuAvailableCount++;
+                 break;
+             case "Occupied":
+                 statuOccupiedCount++;
+                 break;
+                 case"Under Maintenance":
+                     statuUnderMaintenanceCount++;
+                     break;
+                     case"Reserved":
+                         statuReservedCount++;
+                         break;
+         }
+         
+           
+        }
+        System.out.println("Available : "+statuAvailableCount );
+        System.out.println("Occupied : "+statuOccupiedCount);
+        System.out.println("Under Maintenance : "+statuUnderMaintenanceCount);
+        System.out.println("Reserved : "+ statuReservedCount);
+        
+        System.out.println("Room by type : ");
+        int typeSingle=0;
+        int typeDouble=0;
+        int typeSuite=0;
+        int typeDeluxe=0;
+        
+        for(Room rr:room){
+            switch(rr.getRoomType()){
+                case "Single":
+                    typeSingle++;
+                    break;
+                case "Double":
+                    typeDouble++;
+                    break;
+                case "Suite":
+                    typeSuite++;
+                case "Deluxe":
+                    typeDeluxe++;
+                    break;
+                    
+            }
+            
+        }
+        System.out.println("Single Rooms : "+typeSingle);
+        System.out.println("Double Rooms : "+typeDouble);
+        System.out.println("Suite Rooms : "+typeSuite);
+        System.out.println("Deluxe Rooms "+typeDeluxe);
+        
+       double occupancyRate=(double)statuOccupiedCount/room.size();
+        System.out.println("Occupancy Rate : "+occupancyRate+"% ");
+    }
+    
+    
+    
+    
+    
+    
+}
 

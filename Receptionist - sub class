@@ -1,19 +1,105 @@
-package hotelapp;
-
-
-import java.util.ArrayList;
+package hotelapp
+           
+           import java.util.ArrayList;
+import java.util.Scanner;;
 import java.util.Collections;
 
-import java.util.Scanner;
 
 public class Receptionist extends User {
+        Scanner input=new Scanner(System.in);
 
-    public Receptionist( String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
+        
+    public Receptionist(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
+    }
+    
+        
+    
+    
+   
+
+   
+
+    public void searchForAGuest(ArrayList<Guest>guest){
+        System.out.println(" Please Enter the guest ID : ");
+        int gId=input.nextInt();
+        for(Guest g: guest){
+            if(g.getUserId().equals(gId))
+                System.out.println("--------------------------------------------------------------");
+                System.out.println(" The guest was found. ");
+            System.out.println(" --- Guest Information --- ");
+            System.out.println("Guest Name : "+ g.getUserName());
+            System.out.println("Guest Email : "+ g.getUserEmail());
+            System.out.println("Guest Phone Number : "+ g.getUserPhone());
+            System.out.println("Guest Address : "+ g.getUserAddress());
+            System.out.println("Guest Joining Date : "+ g.getUserJoiningDate());
+            System.out.println(" ");
+            System.out.println("Guest Services :");
+            
+            ArrayList<Reservation> reservation=g.getGuestReservation();
+            for(Reservation r:reservation){
+                 System.out.println("Guest Reservation :");
+           
+            System.out.println("Reservation Id : "+r.getReservationID());
+            System.out.println("Guest Cheack-In Date : "+r.getCheckInDate());
+            System.out.println("Guest Cheack-Out Date : "+ r.getCheckOutDate());
+            System.out.println("Reservation Status : "+ r.getReservationStatus());
+            System.out.println("Guest Booking Date : "+ r.getBookingDate());
+            System.out.println("Guest Special Requests : "+r.getSpecialRequests());
+            System.out.println("--------------------------------------------------------------");
+            
+            ArrayList<Service>services=r.getService();
+            int count=0;
+           for(Service s:services){
+               count++;
+               System.out.println("Service "+count+" :");
+               System.out.println(s.getServiceName());
+           }
+            count=0;
+        }
+    }
+        
         
     }
-
-    public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
+        
+        
+        public void processServiceRequests(ArrayList<Service>service){
+            
+            System.out.println("Here are the services requests : ");
+            for(Service s:service){
+                if(s.getServiceStatus().equals("Requested")){
+                    System.out.println("Service Id : "+s.getServiceId());
+                    System.out.println("Service Name : "+s.getServiceName());
+                    System.out.println("Service description : "+s.getDescription());
+                    System.out.println("Please choose the updated status : ");
+                    System.out.println("1- In Progress. ");
+                    System.out.println("2- Completed. ");
+                    System.out.println("3- Cancelled. ");
+                    int updatedStatus=input.nextInt();
+                    
+                    switch(updatedStatus){
+                        case 1:
+                            s.setServiceStatus("In Progress");
+                            break;
+                        case 2:
+                           s.setServiceStatus("Completed");
+                           break;
+                        case 3:
+                            s.setServiceStatus("Cancelled");
+                            break;
+                           
+                        
+                    }
+                     System.out.println("Service status has been updated successfully.");
+                }
+            }
+            
+        
+        }
+    
+    // lamia methods
+        
+        public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
         Scanner in = new Scanner(System.in);
 
         System.out.println("Enter the check in date, check out dates, as well as the umber of guests:");
@@ -81,11 +167,13 @@ public class Receptionist extends User {
         }
     }
 
-    public void ChangeRoomStatus(String roomStatus, String reservationID, ArrayList<Reservation> reservations) {
-        for (Reservation reservation: reservations) {
-            if(reservation.getReservationID() == reservationID)
-                reservation.getRoom().setRoomStatus(roomStatus);
-        }
+    public void ChangeRoomStatus(String roomStatus) {
+        guest.getGuestReservation().getRoom().setRoomStatus(roomStatus);
     }
 
 }
+    
+                
+    
+    
+

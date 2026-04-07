@@ -1,7 +1,13 @@
 package hotelapp;
 
-public class Service {
+import java.util.Scanner;
 
+
+
+
+public class Service {
+    
+    Scanner input=new Scanner(System.in);
     private String serviceId;
     private String serviceName;
     private String description;
@@ -9,57 +15,56 @@ public class Service {
     private String reservationId;
     private String requestDate;
     private String serviceStatus;
+    
+    
 
     public Service(String serviceId, String serviceName, String description, double price, String reservationId, String requestDate, String serviceStatus) {
-        setServiceId(serviceId);
-        setServiceName(serviceName);
-        setDescription(description);
-        setPrice(price);
-        setReservationId(reservationId);
+      setServiceId(serviceId);
+       setServiceName(serviceName);
+       setDescription(description);
+       setPrice(price);
+       setReservationId(reservationId);
         setRequestDate(requestDate);
-        setServiceStatus(serviceStatus);
+       setServiceStatus(serviceStatus);
     }
 
+    
+    
+    
+    
     public void setServiceId(String serviceId) {
-        if ((serviceId != null) && (!serviceId.equals(""))) {
-            this.serviceId = serviceId;
-        }
+        if((serviceId!=null)&&(!serviceId.equals("")))
+        this.serviceId = serviceId;
     }
 
     public void setServiceName(String serviceName) {
-        if ((serviceName != null) && (!serviceName.equals(""))) {
-            this.serviceName = serviceName;
-        }
+        if((serviceName!=null)&&(!serviceName.equals("")))
+        this.serviceName = serviceName;
     }
 
     public void setDescription(String description) {
-        if ((description != null) && (!description.equals(""))) {
-            this.description = description;
-        }
+        if((description!=null)&&(!description.equals("")))
+        this.description = description;
     }
 
     public void setPrice(double price) {
-        if (price < 0) {
-            this.price = price;
-        }
+        if(price>0)
+        this.price = price;
     }
 
     public void setReservationId(String reservationId) {
-        if ((reservationId != null) && (!reservationId.equals(""))) {
-            this.reservationId = reservationId;
-        }
+        if((reservationId!=null)&&(!reservationId.equals("")))
+        this.reservationId = reservationId;
     }
 
     public void setRequestDate(String requestDate) {
-        if ((requestDate != null) && (!requestDate.equals(""))) {
-            this.requestDate = requestDate;
-        }
+        if((requestDate!=null)&&(!requestDate.equals("")))
+        this.requestDate = requestDate;
     }
 
     public void setServiceStatus(String serviceStatus) {
-        if ((serviceStatus.equals("Requested")) || (serviceStatus.equals("In Progress")) || (serviceStatus.equals("Completed")) || (serviceStatus.equals("Cancelled"))) {
-            this.serviceStatus = serviceStatus;
-        }
+        if((serviceStatus.equals("Requested"))||(serviceStatus.equals("In Progress"))||(serviceStatus.equals("Completed"))||(serviceStatus.equals("Cancelled")))
+        this.serviceStatus = serviceStatus;
     }
 
     public String getServiceId() {
@@ -89,5 +94,10 @@ public class Service {
     public String getServiceStatus() {
         return serviceStatus;
     }
+    
+    
+    }
+    
+    
+    
 
-}

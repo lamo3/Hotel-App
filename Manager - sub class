@@ -1,64 +1,62 @@
-package hotelapp;
+package hotelappfinal;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
+import org.w3c.dom.css.Counter;
 
+public class Manager extends User {
 
+    Scanner input = new Scanner(System.in);
 
-public class Manager extends User{
-    
-    Scanner input=new Scanner(System.in);
-    public Manager(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
+    public Manager(String userId, LocalDate userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
-    
-    
-    public void generateRevenueReport(ArrayList<Reservation>reservation){//reservation has a room,invoice and Arraylist of service
+
+    public void generateRevenueReport(ArrayList<Reservation> reservation) {//reservation has a room,invoice and Arraylist of service
         System.out.println("--- Please enter the reporting period ---");
         System.out.println("Enter start date (YYYY-MM-DD). ");
-        LocalDate startDate=LocalDate.parse(input.next());
+        LocalDate startDate = LocalDate.parse(input.next());
         System.out.println("Enter end date (YYYYMMDD). ");
-        LocalDate endDate=LocalDate.parse(input.next());
-        double totalRevenue=0;
-        int totalOccupancyRooms=0;
-        int totalRooms=0;
-        int totalServiceUsage=0;
-        int totalOutstandingPayment=0;
-        for(Reservation r:reservation){
-            LocalDate cheackIn=LocalDate.parse(r.getCheckInDate());
-            LocalDate checkOut=LocalDate.parse(r.getCheckOutDate());
-           if(cheackIn.isAfter(startDate)||cheackIn.isEqual(startDate)&&checkOut.isBefore(endDate)||checkOut.isEqual(endDate)){
-             
-             totalRevenue+=r.getInvoice().getTotalAmount();
-            
-             
-             if(r.getRoom().equals("Occupied")){
-                 totalOccupancyRooms++;
-             }
-            totalRooms++;
-            ArrayList<Service> service=r.getService();
-             totalServiceUsage+=service.size();
-             if(r.getInvoice().getPaymentStatus().equals("Unpaid"))
-                 totalOutstandingPayment++;
-                 
+        LocalDate endDate = LocalDate.parse(input.next());
+        double totalRevenue = 0;
+        int totalOccupancyRooms = 0;
+        int totalRooms = 0;
+        int totalServiceUsage = 0;
+        int totalOutstandingPayment = 0;
+        for (Reservation r : reservation) {
+            LocalDate cheackIn = LocalDate.parse(r.getCheckInDate());
+            LocalDate checkOut = LocalDate.parse(r.getCheckOutDate());
+            if (cheackIn.isAfter(startDate) || cheackIn.isEqual(startDate) && checkOut.isBefore(endDate) || checkOut.isEqual(endDate)) {
+
+                totalRevenue += r.getInvoice().getTotalAmount();
+
+                if (r.getRoom().equals("Occupied")) {
+                    totalOccupancyRooms++;
+                }
+                totalRooms++;
+                ArrayList<Service> service = r.getService();
+                totalServiceUsage += service.size();
+                if (r.getInvoice().getPaymentStatus().equals("Unpaid")) {
+                    totalOutstandingPayment++;
+                }
+
             }
         }
-            System.out.println(" ------ Revenue Report ----- ");
-            System.out.println(" Period ["+startDate+" to "+endDate+"]");
-            System.out.println("******************************");
-            System.out.println("Total Revenue : "+totalRevenue);
-            System.out.println("Occupancy Rates "+(totalOccupancyRooms/totalRooms*100)+"%");
-            System.out.println("Total Service Usage : "+totalServiceUsage);
-            System.out.println("Outstanding Payments : "+totalOutstandingPayment);
-            System.out.println("******************************");
-            
-            }
-    
-    
-    
+        System.out.println(" ------ Revenue Report ----- ");
+        System.out.println(" Period [" + startDate + " to " + endDate + "]");
+        System.out.println("******************************");
+        System.out.println("Total Revenue : " + totalRevenue);
+        System.out.println("Occupancy Rates " + (totalOccupancyRooms / totalRooms * 100) + "%");
+        System.out.println("Total Service Usage : " + totalServiceUsage);
+        System.out.println("Outstanding Payments : " + totalOutstandingPayment);
+        System.out.println("******************************");
+
+    }
+
     // lamia method
-     public void ManageRoomInventory(LinkedList<Room> rooms) {
+    public void ManageRoomInventory(LinkedList<Room> rooms) {
         Scanner in = new Scanner(System.in);
 
         System.out.println("Would you like to (Enter a number): \n1.Add a new room? \n2.Update room details? \n3.Remove a room?");
@@ -174,11 +172,146 @@ public class Manager extends User{
         }
     }
 
+    public void ManageSystemUsersAndRoles(ArrayList<User> users) {
+        Scanner in = new Scanner(System.in);
+        System.out.println("--------------------------------------------------------------\n");
+
+        System.out.println(" --- Managing System Users and Roles --- ");
+        System.out.println("What would you to do? (Enter a number)"
+                + "\n1. Add a user"
+                + "\n2. Edit a user"
+                + "\n3. Remove a user"
+                + "\n4. Assign a role");
+        int choice = in.nextInt();
+        
+        switch (choice) {
+            case 1:
+                LocalDate date = LocalDate.now();
+                System.out.println("Enter the following details: \nID:");
+                String ID = in.nextLine();
+                System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
+                int role = in.nextInt();
+                System.out.println("\nName:");
+                String name = in.nextLine();
+                System.out.println("\nEmail:");
+                String email = in.nextLine();
+                System.out.println("\nPhone number:");
+                String phone = in.nextLine();
+                System.out.println("\nAddress:");
+                String address = in.nextLine();
+
+                switch (role) {
+                    case 1:
+                        users.add(new Guest(ID, date, name, email, phone, address, "Guest"));
+                        System.out.println("User added!");
+                        break;
+                    case 2:
+                        users.add(new Receptionist(ID, date, name, email, phone, address, "Receptionist"));
+                        System.out.println("User added!");
+                        break;
+                    case 3:
+                        users.add(new Manager(ID, date, name, email, phone, address, "Manager"));
+                        System.out.println("User added!");
+                        break;
+                    default:
+                        System.out.println("Invalid role!");
+                }
+                break;
+            case 2:
+                System.out.print("Enter the ID for the user you want to edit: ");
+                ID = in.nextLine();
+                for(User user: users){
+                    if(user.getUserId() == ID){
+                        System.out.println("What would you like to edit? (Enter a number)"
+                                + "\n1. Name"
+                                + "\n2. Email"
+                                + "\n3. Phone number"
+                                + "\n4. Address");
+                        choice = in.nextInt();
+                        
+                        switch (choice) {
+                            case 1:
+                                System.out.print("Enter a new name: ");
+                                name = in.nextLine();
+                                user.setUserName(name);
+                                break;
+                            case 2:
+                                System.out.print("Enter a new email: ");
+                                email = in.nextLine();
+                                user.setUserEmail(email);
+                                break;
+                            case 3:
+                                System.out.print("Enter a new phine number: ");
+                                phone = in.nextLine();
+                                user.setUserPhone(phone);
+                                break;
+                            case 4:
+                                System.out.print("Enter a new Address: ");
+                                address = in.nextLine();
+                                user.setUserAddress(address);
+                                break;
+                        }
+                    }
+                    
+                    else
+                        System.out.println("there is no user under this ID");
+                }
+                break;
+            case 3:
+                int counter = 0;
+                for(User user: users){
+                    if(user instanceof Manager)
+                        counter++;
+                }
+                
+                System.out.print("Enter the ID of the user you want to remove: ");
+                ID = in.nextLine();
+                for(User user: users){
+                    if(user.getUserId() == ID){
+                        if(user.getRole() == "Manager" & counter == 1)
+                            System.out.println("You cannot remove this user because they are the only manager!");
+                        else{
+                            users.add(user);
+                            System.out.println("The user was removed!");
+                        }
+                    }
+                    
+                    else
+                        System.out.println("There is no user under this ID.");
+                }
+                
+                break;
+            case 4:
+                System.out.print("Enter the ID of the user you want to edit the role for: ");
+                ID = in.nextLine();
+                for(User user: users){
+                    if(user.getUserId() == ID){
+                        System.out.println("Select a role: (Enter a number)"
+                                + "\n1. Guest"
+                                + "\n2. Receptionist"
+                                + "\n3. Manager");
+                        role = in.nextInt();
+                        
+                        switch(role){
+                            case 1:
+                                user.setRole("Guest");
+                                break;
+                            case 2:
+                                user.setRole("Receptionist");
+                                break;
+                            case 3:
+                                user.setRole("Manager");
+                                break;
+                            default :
+                                System.out.println("Invalid role!");
+                        }
+                    }
+                }
+                
+                break;
+            default :
+                System.out.println("Invalid option!");
+        }
+    }
+
 }
-        
-        
-    
-    
-
-    
-

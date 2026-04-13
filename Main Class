@@ -1,72 +1,312 @@
-mport java.time.LocalDate;
+package hotelappfinal;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+public class HotelAppFinal {
 
-public class Hotel1 {
+    static int countF = 1;
+    static ArrayList<Guest> guest;
+    static ArrayList<Reservation> reservation; // all reservations not just the guest using the app
+    static ArrayList<Room> room;
+    static Scanner input = new Scanner(System.in);
 
-   
-    static int countF=1;
-    static ArrayList<Guest>guest;
-    static ArrayList<Reservation>reservation;
-    static ArrayList<Room>room;
-    static Scanner input=new Scanner(System.in);
     public static void main(String[] args) {
-       
-        
-        
-       
-        
-        
-        
-        
-       
-        
-        
+        Scanner in = new Scanner(System.in);
+        ArrayList<User> users = new ArrayList<>();
+
+        //add rooms
+        System.out.println("----- Welcome to our Hotel App! -----");
+        System.out.print("1. Login to your existing account \n2. Create an account and sign up \nChoose a number: ");
+        int choice = in.nextInt();
+        switch (choice) {
+            case 1:
+                System.out.print("Enter your email or phone number: ");
+                String emailOrPhone = in.nextLine();
+                for (User user : users) {
+                    if (emailOrPhone == user.getUserEmail() | emailOrPhone == user.getUserPhone()) {
+                        System.out.println("Login successfull!");
+                        switch (user.getRole()) {
+                            case "Guest":
+                                Guest g = (Guest) user;
+                                Guest(users, g);
+                                break;
+                            case "Receptionist":
+                                Receptionist r = (Receptionist) user;
+                                Receptionist(users, r);
+                                break;
+                            case "Manager":
+                                Manager m = (Manager) user;
+                                Manager(users, m);
+                                break;
+                        }
+                    } else {
+                        System.out.println("There is no account!");
+                    }
+                }
+                break;
+            case 2:
+                LocalDate date = LocalDate.now();
+                System.out.println("Enter the following details: \nID:");
+                String ID = in.nextLine();
+                System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
+                int role = in.nextInt();
+                System.out.println("\nName:");
+                String name = in.nextLine();
+                System.out.println("\nEmail:");
+                String email = in.nextLine();
+                System.out.println("\nPhone number:");
+                String phone = in.nextLine();
+                System.out.println("\nAddress:");
+                String address = in.nextLine();
+
+                switch (role) {
+                    case 1:
+                        users.add(new Guest(ID, date, name, email, phone, address, "Guest"));
+                        System.out.println("Sign in successfull!");
+                        Guest(users, (Guest) users.getLast());
+                        break;
+                    case 2:
+                        users.add(new Receptionist(ID, date, name, email, phone, address, "Receptionist"));
+                        System.out.println("Sign in successfull!");
+                        Receptionist(users, (Receptionist) users.getLast());
+                        break;
+                    case 3:
+                        users.add(new Manager(ID, date, name, email, phone, address, "Manager"));
+                        System.out.println("Sign in successfull!");
+                        Manager(users, (Manager) users.getLast());
+                        break;
+                    default:
+                        System.out.println("Invalid role!");
+                }
+                break;
+            default:
+                System.out.println("Invalid option!");
+
+        }
+    }
+
+    public static void Guest(ArrayList<User> users, Guest guest) {
+        Scanner in = new Scanner(System.in);
+
+        System.out.println("----- Welcome " + users.getLast().getUserName() + "! -----");
+        System.out.println("What would you like to do? (Enter a number; 0 to exit)"
+                + "\n1. Search for available rooms "
+                + "\n2. Make a reservation"
+                + "\n3. Cancel a reservation"
+                + "\n4. View reservation details"
+                + "\n5. Request a service"
+                + "\n6. View invoice and payment status"
+                + "\n7. Make a payment"
+                + "\n8. Submit feedback"
+                + "\n9. Update contact information");
+        int choice = in.nextInt();
+
+        while (choice != 0) {
+            switch (choice) {
+                case 1:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Search Available Rooms --- ");
+                    System.out.print("Enter a check in date: ");
+                    String checkInDate = in.nextLine();
+                    System.out.print("Enter a check out date: ");
+                    String checkOutDate = in.nextLine();
+                    System.out.print("Enter the number of guests: ");
+                    int noOfGuests = in.nextInt();
+
+                    System.out.println("Rooms available: ");
+
+                    guest.SearchAvailableRooms(checkInDate, checkOutDate, noOfGuests, room, reservation);
+                    break;
+                case 2:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Make a Reservation --- ");
+                    LocalDate date = LocalDate.now();
+                    String dateNow = date.toString();
+
+                    System.out.print("Enter a check in date: ");
+                    checkInDate = in.nextLine();
+                    System.out.print("Enter a check out date: ");
+                    checkOutDate = in.nextLine();
+                    System.out.print("Enter the number of guests: ");
+                    noOfGuests = in.nextInt();
+                    System.out.println("Any special requests? ");
+                    String specialRequests = in.nextLine();
+
+                    System.out.println("Rooms available: ");
+
+                    guest.SearchAvailableRooms(checkInDate, checkOutDate, noOfGuests, room, reservation);
+                    System.out.println("Which room would you like? (Enter the room number)");
+                    String roomNumber = in.nextLine();
+
+                    for (Room rooms : room) {
+                        if (rooms.getRoomNumber() == roomNumber) {
+                            reservation.add(new Reservation(guest.getUserId(), checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms));
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Cancel a Reservation --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    String reservationID = in.nextLine();
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            guest.getGuestReservation().remove(reservation);
+                            System.out.println("Cancellation successfull!");
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 4:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- View Reservation Details --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    reservationID = in.nextLine();
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            System.out.println(reservation);
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 5:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Request a Service --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    reservationID = in.nextLine();
+
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            reservation.requestAService();
+                            System.out.println("Request successfull!");
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 6:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- View Invoice and Payment Status --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    reservationID = in.nextLine();
+
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            guest.ViewInvoice(reservation);
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 7:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Make a Payment --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    reservationID = in.nextLine();
+
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            guest.MakeAPayment(reservation);
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 8:
+                    System.out.println("--------------------------------------------------------------\n");
+
+                    System.out.println(" --- Submit Feedback --- ");
+                    System.out.print("Enter your reservation ID: ");
+                    reservationID = in.nextLine();
+
+                    for (Reservation reservation : guest.getGuestReservation()) {
+                        if (reservation.getReservationID() == reservationID) {
+                            reservation.submitGuestFeedback();
+                        } else {
+                            System.out.println("There is no reservation under this ID.");
+                        }
+                    }
+                    break;
+                case 9:
+                    guest.updateupdateContactInfo();
+                    break;
+                default:
+                    System.out.println("Invalid option!");
             }
-   
-  
-    public static void viewHotalStatistics(){
-        System.out.println("Total number of rooms : "+ room.size());
-        System.out.println("Total number of Reservation : "+reservation.size());
-        System.out.println(" Total number of guests : "+guest.size());
+
+            System.out.println("Would you like to do anything else?(Enter a number; 0 to exit)"
+                    + "\n1. Search for available rooms "
+                    + "\n2. Make a reservation"
+                    + "\n3. Cancel a reservation"
+                    + "\n4. View reservation details"
+                    + "\n5. Request a service"
+                    + "\n6. View invoice and payment status"
+                    + "\n7. Make a payment"
+                    + "\n8. Submit feedback"
+                    + "\n9. Update contact information");
+            choice = in.nextInt();
+        }
+    }
+
+    public static void Receptionist(ArrayList<User> users, Receptionist receptionist) {
+
+    }
+
+    public static void Manager(ArrayList<User> users, Manager manager) {
+
+    }
+
+    public static void viewHotalStatistics() {
+        System.out.println("Total number of rooms : " + room.size());
+        System.out.println("Total number of Reservation : " + reservation.size());
+        System.out.println(" Total number of guests : " + guest.size());
         System.out.println("--------------------------------------------------------------");
         System.out.println("Rooms by status : ");
-        int statuAvailableCount=0;
-        int statuOccupiedCount=0;
-        int statuUnderMaintenanceCount=0;
-        int statuReservedCount=0;
-        for(Room r:room){
-         switch(r.getRoomStatus()){
-             case "Available":
-                 statuAvailableCount++;
-                 break;
-             case "Occupied":
-                 statuOccupiedCount++;
-                 break;
-                 case"Under Maintenance":
-                     statuUnderMaintenanceCount++;
-                     break;
-                     case"Reserved":
-                         statuReservedCount++;
-                         break;
-         }
-         
-           
+        int statuAvailableCount = 0;
+        int statuOccupiedCount = 0;
+        int statuUnderMaintenanceCount = 0;
+        int statuReservedCount = 0;
+        for (Room r : room) {
+            switch (r.getRoomStatus()) {
+                case "Available":
+                    statuAvailableCount++;
+                    break;
+                case "Occupied":
+                    statuOccupiedCount++;
+                    break;
+                case "Under Maintenance":
+                    statuUnderMaintenanceCount++;
+                    break;
+                case "Reserved":
+                    statuReservedCount++;
+                    break;
+            }
+
         }
-        System.out.println("Available : "+statuAvailableCount );
-        System.out.println("Occupied : "+statuOccupiedCount);
-        System.out.println("Under Maintenance : "+statuUnderMaintenanceCount);
-        System.out.println("Reserved : "+ statuReservedCount);
-        
+        System.out.println("Available : " + statuAvailableCount);
+        System.out.println("Occupied : " + statuOccupiedCount);
+        System.out.println("Under Maintenance : " + statuUnderMaintenanceCount);
+        System.out.println("Reserved : " + statuReservedCount);
+
         System.out.println("Room by type : ");
-        int typeSingle=0;
-        int typeDouble=0;
-        int typeSuite=0;
-        int typeDeluxe=0;
-        
-        for(Room rr:room){
-            switch(rr.getRoomType()){
+        int typeSingle = 0;
+        int typeDouble = 0;
+        int typeSuite = 0;
+        int typeDeluxe = 0;
+
+        for (Room rr : room) {
+            switch (rr.getRoomType()) {
                 case "Single":
                     typeSingle++;
                     break;
@@ -78,23 +318,17 @@ public class Hotel1 {
                 case "Deluxe":
                     typeDeluxe++;
                     break;
-                    
-            }
-            
-        }
-        System.out.println("Single Rooms : "+typeSingle);
-        System.out.println("Double Rooms : "+typeDouble);
-        System.out.println("Suite Rooms : "+typeSuite);
-        System.out.println("Deluxe Rooms "+typeDeluxe);
-        
-       double occupancyRate=(double)statuOccupiedCount/room.size();
-        System.out.println("Occupancy Rate : "+occupancyRate+"% ");
-    }
-    
-    
-    
-    
-    
-    
-}
 
+            }
+
+        }
+        System.out.println("Single Rooms : " + typeSingle);
+        System.out.println("Double Rooms : " + typeDouble);
+        System.out.println("Suite Rooms : " + typeSuite);
+        System.out.println("Deluxe Rooms " + typeDeluxe);
+
+        double occupancyRate = (double) statuOccupiedCount / room.size();
+        System.out.println("Occupancy Rate : " + occupancyRate + "% ");
+    }
+
+}

@@ -1,4 +1,4 @@
-package hotel1;
+package hotelappfinal;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,7 +10,8 @@ import java.util.Scanner;
  * @author lamyaalhamad
  */
 public class Reservation implements Comparable<Reservation> {
- Scanner input=new Scanner(System.in);// halah add 
+
+    Scanner input = new Scanner(System.in);// halah add 
     private String reservationID;
     private String associatedGuestID;
     private String checkInDate;
@@ -27,9 +28,9 @@ public class Reservation implements Comparable<Reservation> {
     private static ArrayList<Invoice> allInvoices;
     private static int reservationCounter;
     private FeedBack guestFeedBack; // i add set and get and add this one 
-    private static int countS=1;// halah add
-    private static int countF=1;// Hlaha dd
-    
+    private static int countS = 1;// halah add
+    private static int countF = 1;// Hlaha dd
+
     public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, Room room) {
 
         room.setRoomStatus("Reserved");
@@ -205,11 +206,10 @@ public class Reservation implements Comparable<Reservation> {
 
     }
 
-     public void addService(Service s){//Halah add 
+    public void addService(Service s) {//Halah add 
         services.add(s);
     }
-    
-    
+
     public void setUser(User user) {
         if (user != null) {
             this.user = user;
@@ -217,9 +217,11 @@ public class Reservation implements Comparable<Reservation> {
             System.out.println("Invalid user!");
         }
     }
-            public void setInvoice(Invoice invoice) {// halah add 
+
+    public void setInvoice(Invoice invoice) {// halah add 
         this.invoice = invoice;
     }
+
     public void setRoom(Room room) {
         if (room != null) {
             this.room = room;
@@ -227,10 +229,11 @@ public class Reservation implements Comparable<Reservation> {
             System.out.println("Invalid room!");
         }
     }
-        public void setGuestFeedBack(FeedBack guestFeedBack) {//halah add 
+
+    public void setGuestFeedBack(FeedBack guestFeedBack) {//halah add 
         this.guestFeedBack = guestFeedBack;
     }
-    
+
     public String getReservationID() {
         return reservationID;
     }
@@ -258,9 +261,11 @@ public class Reservation implements Comparable<Reservation> {
     public String getSpecialRequests() {
         return specialRequests;
     }
-            public Invoice getInvoice() {// halah add 
+
+    public Invoice getInvoice() {// halah add 
         return invoice;
     }
+
     public String getBookingDate() {
         return bookingDate;
     }
@@ -277,13 +282,14 @@ public class Reservation implements Comparable<Reservation> {
         return room;
     }
 
-   
-        public FeedBack getGuestFeedBack() {// halah add
+    public FeedBack getGuestFeedBack() {// halah add
         return guestFeedBack;
     }
-     public ArrayList<Service> getService() {// halah add 
+
+    public ArrayList<Service> getService() {// halah add 
         return services;
     }
+
     @Override
     public String toString() {
         return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests;
@@ -299,31 +305,32 @@ public class Reservation implements Comparable<Reservation> {
             return 0;
         }
     }
-    
-    public void cheackOut(){// halah add
-        if(this.reservationStatus.equals("Cheacked-In")){
-        setReservationStatus("Checked-Out");
-       getRoom().setRoomStatus("Available");
-        double finalInvoice=getInvoice().getTotalAmount();
-        System.out.println("Final Invoice : "+finalInvoice);
+
+    public void cheackOut() {// halah add
+        if (this.reservationStatus.equals("Cheacked-In")) {
+            setReservationStatus("Checked-Out");
+            getRoom().setRoomStatus("Available");
+            double finalInvoice = getInvoice().getTotalAmount();
+            System.out.println("Final Invoice : " + finalInvoice);
         }
-        
+
     }
-                public void registerGuestArrival(){ //  halah add
-                 System.out.println("-----------------------------------");
-                 if(this.reservationStatus.equals("Confirmed")){
-                     setReservationStatus("Cheacked-In");
-                     getRoom().setRoomStatus(("Occupied"));
-                     System.out.println("Guest has been cheacked in successfully! ");
-                     
-                 }
-                 else 
-                        System.out.println("Cannot Cheack In. The reservation is not confrimed. ");
-                 System.out.println("-----------------------------------");
- }
-     public Service requestAService(){// halah add
-       
-        
+
+    public void registerGuestArrival() { //  halah add
+        System.out.println("-----------------------------------");
+        if (this.reservationStatus.equals("Confirmed")) {
+            setReservationStatus("Cheacked-In");
+            getRoom().setRoomStatus(("Occupied"));
+            System.out.println("Guest has been cheacked in successfully! ");
+
+        } else {
+            System.out.println("Cannot Cheack In. The reservation is not confrimed. ");
+        }
+        System.out.println("-----------------------------------");
+    }
+
+    public Service requestAService() {// halah add
+
         System.out.println("--------------------------------------------------------------");
         System.out.println("Please select a service : ");
         System.out.println("1- Room Service. ");
@@ -331,66 +338,57 @@ public class Reservation implements Comparable<Reservation> {
         System.out.println("3- Spa. ");
         System.out.println("4- Airport Shuttle. ");
         System.out.println("--------------------------------------------------------------");
-        
-        int guestServiceRequest=input.nextInt();
-         String serviceId="SI"+countS;
-         countS++;
-                
-               
-        switch(guestServiceRequest){
+
+        int guestServiceRequest = input.nextInt();
+        String serviceId = "SI" + countS;
+        countS++;
+
+        switch (guestServiceRequest) {
             case 1:
-                addService(new Service(serviceId,"Room Service","Delivery service to the guest room",80.75,this.reservationID,LocalDate.now().toString(),"Requested"));
-               return (new Service(serviceId,"Room Service","Delivery service to the guest room",80.75,this.reservationID,LocalDate.now().toString(),"Requested"));
-               
+                addService(new Service(serviceId, "Room Service", "Delivery service to the guest room", 80.75, this.reservationID, LocalDate.now().toString(), "Requested"));
+                return (new Service(serviceId, "Room Service", "Delivery service to the guest room", 80.75, this.reservationID, LocalDate.now().toString(), "Requested"));
+
             case 2:
-                addService(new Service(serviceId,"Laundry","Washing clothes",90.3,this.reservationID,LocalDate.now().toString(),"Requested"));
-                return (new Service(serviceId,"Laundry","Washing clothes",90.3,this.reservationID,LocalDate.now().toString(),"Requested"));
-               
+                addService(new Service(serviceId, "Laundry", "Washing clothes", 90.3, this.reservationID, LocalDate.now().toString(), "Requested"));
+                return (new Service(serviceId, "Laundry", "Washing clothes", 90.3, this.reservationID, LocalDate.now().toString(), "Requested"));
+
             case 3:
-                addService(new Service(serviceId,"Spa","Spa service",180.5,this.reservationID,LocalDate.now().toString(),"Requested"));
-                return (new Service(serviceId,"Spa","Spa service",180.5,this.reservationID,LocalDate.now().toString(),"Requested"));
-                
+                addService(new Service(serviceId, "Spa", "Spa service", 180.5, this.reservationID, LocalDate.now().toString(), "Requested"));
+                return (new Service(serviceId, "Spa", "Spa service", 180.5, this.reservationID, LocalDate.now().toString(), "Requested"));
+
             case 4:
-                addService(new Service(serviceId,"Airport Shuttle","Airport transport",110,this.reservationID,LocalDate.now().toString(),"Requested"));
-               return (new Service(serviceId,"Airport Shuttle","Airport transport",110,this.reservationID,LocalDate.now().toString(),"Requested"));
-                
-                
+                addService(new Service(serviceId, "Airport Shuttle", "Airport transport", 110, this.reservationID, LocalDate.now().toString(), "Requested"));
+                return (new Service(serviceId, "Airport Shuttle", "Airport transport", 110, this.reservationID, LocalDate.now().toString(), "Requested"));
+
             default:
                 System.out.println(" Sorry. The option you entered is not available! ");
-                
-              
+
         }
         return null;
-        
-       
+
     }
-                
-                  public FeedBack submitGuestFeedback(){// halah add 
-        if(this.reservationStatus.equals("Checked-Out")){
-            String feedbackId="FI"+countF;
+
+    public FeedBack submitGuestFeedback() {// halah add 
+        if (this.reservationStatus.equals("Checked-Out")) {
+            String feedbackId = "FI" + countF;
             countF++;
             System.out.println("--------------------------------------------------------------");
             System.out.println("Please enter your rating number : ");
-            int rating=input.nextInt();
+            int rating = input.nextInt();
             System.out.println("Please enter your comments : --optional--");
-           String comment=input.nextLine();
+            String comment = input.nextLine();
             System.out.println("Thank you for your valuable feedback. We look forward to serving you again!");
-            if(comment!=null && !comment.equals("")){
-          setGuestFeedBack(new FeedBack(feedbackId,this.associatedGuestID,this.reservationID,rating,comment,LocalDate.now().toString()));
-          return new FeedBack(feedbackId,this.associatedGuestID,this.reservationID,rating,comment,LocalDate.now().toString());
+            if (comment != null && !comment.equals("")) {
+                setGuestFeedBack(new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, comment, LocalDate.now().toString()));
+                return new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, comment, LocalDate.now().toString());
+            } else {
+                setGuestFeedBack(new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, LocalDate.now().toString()));
+                return new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, LocalDate.now().toString());
+
             }
-            else{
-               setGuestFeedBack(new FeedBack(feedbackId,this.associatedGuestID,this.reservationID,rating,LocalDate.now().toString()));
-               return new FeedBack(feedbackId,this.associatedGuestID,this.reservationID,rating,LocalDate.now().toString());
-            
+
         }
-        
-        
+        return null;
+
     }
-    return null;
-    
-                  }
 }
-
-          
-

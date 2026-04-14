@@ -48,6 +48,7 @@ public class HotelAppFinal {
                 break;
             case 2:
                 LocalDate date = LocalDate.now();
+                String dateString = date.toString();
                 System.out.println("Enter the following details: \nID:");
                 String ID = in.nextLine();
                 System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
@@ -63,17 +64,17 @@ public class HotelAppFinal {
 
                 switch (role) {
                     case 1:
-                        users.add(new Guest(ID, date, name, email, phone, address, "Guest"));
+                        users.add(new Guest(ID, dateString, name, email, phone, address, "Guest"));
                         System.out.println("Sign in successfull!");
                         Guest(users, (Guest) users.getLast());
                         break;
                     case 2:
-                        users.add(new Receptionist(ID, date, name, email, phone, address, "Receptionist"));
+                        users.add(new Receptionist(ID, dateString, name, email, phone, address, "Receptionist"));
                         System.out.println("Sign in successfull!");
                         Receptionist(users, (Receptionist) users.getLast());
                         break;
                     case 3:
-                        users.add(new Manager(ID, date, name, email, phone, address, "Manager"));
+                        users.add(new Manager(ID, dateString, name, email, phone, address, "Manager"));
                         System.out.println("Sign in successfull!");
                         Manager(users, (Manager) users.getLast());
                         break;

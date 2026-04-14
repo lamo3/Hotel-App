@@ -1,5 +1,6 @@
 package hotelappfinal;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
@@ -155,12 +156,10 @@ public class Receptionist extends User {
         }
     }
 
-    public void ChangeRoomStatus(String roomStatus, ArrayList<Guest> guests, String guestID) {
-        for (Guest guest: guests) {
-            if(guest.getUserId() == guestID){
-                guest.getGuestReservation().getLast().getRoom().setRoomStatus(roomStatus);
-            }
+    public void ChangeRoomStatus(String roomStatus, String reservationID, ArrayList<Reservation> reservations) {
+        for (Reservation reservation: reservations) {
+            if(reservation.getReservationID() == reservationID)
+                reservation.getRoom().setRoomStatus(roomStatus);
         }
     }
-
 }

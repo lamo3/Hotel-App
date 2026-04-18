@@ -88,25 +88,25 @@ public class Receptionist extends User {
     }
 
     // lamia methods
+    // used by the receptionist to create a last minute reservation for a guest
     public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
-        Scanner in = new Scanner(System.in);
-
+        
         System.out.println("Enter the check in date, check out dates, as well as the umber of guests:");
 
         System.out.print("Check in date (DD/MM/YYYY): ");
-        String checkInDate = in.nextLine();
+        String checkInDate = input.nextLine();
 
         System.out.print("\nCheck out date (DD/MM/YYYY): ");
-        String checkOutDate = in.nextLine();
+        String checkOutDate = input.nextLine();
 
         System.out.println("\nNumber of guests (1-4): ");
         int numberOfguests = 0;
         while (numberOfguests <= 1 | numberOfguests >= 4) {
-            System.out.println("Invalid!");
-            numberOfguests = in.nextInt();
+            System.out.println("Invalid number of guests!");
+            numberOfguests = input.nextInt();
         }
 
-        Collections.sort(rooms);
+        Collections.sort(rooms); // to display from highest price to lowest price
         int count = 0;
         for (Room room1 : rooms) {
             if (room1.getRoomStatus() == "Available") {
@@ -116,7 +116,7 @@ public class Receptionist extends User {
             count++;
         }
 
-        Collections.sort(reservations);
+        Collections.sort(reservations);// to display from highest price to lowest price
         for (Reservation reservation1 : reservations) {
             if (checkInDate == reservation1.getCheckInDate() & checkOutDate == reservation1.getCheckOutDate() & numberOfguests == reservation1.getNumberOfGuests()) {
                 continue;
@@ -129,22 +129,22 @@ public class Receptionist extends User {
 
         if (count != 0) {
             System.out.println("Enter the room number for the room you would like to reserve: ");
-            String roomNumber = in.next();
+            String roomNumber = input.next();
             System.out.println("Enter the guest ID: ");
-            String guestID = in.nextLine();
+            String guestID = input.nextLine();
             System.out.println("Enter the booking date: ");
-            String bookingDate = in.nextLine();
+            String bookingDate = input.nextLine();
             System.out.println("Any special requests? ");
-            String specialRequest = in.nextLine();
+            String specialRequest = input.nextLine();
 
-            for (Reservation reservation1 : reservations) {
+            for (Reservation reservation1 : reservations) {// checks to see if there is a room available that is reserved but available on a different day
                 if (roomNumber == reservation1.getRoom().getRoomNumber()) {
                     reservations.add(new Reservation(guestID, checkInDate, checkOutDate, numberOfguests, specialRequest, bookingDate, reservation1.getRoom()));
                 }
             }
 
             for (Room room1 : rooms) {
-                if (roomNumber == room1.getRoomNumber()) {
+                if (roomNumber == room1.getRoomNumber()) {// checks to see if there is a room available
                     reservations.add(new Reservation(guestID, checkInDate, checkOutDate, numberOfguests, specialRequest, bookingDate, room1));
                 }
 
@@ -156,6 +156,7 @@ public class Receptionist extends User {
         }
     }
 
+    // lets receptionist check in/out guests as well as change the room status to other states
     public void ChangeRoomStatus(String roomStatus, String reservationID, ArrayList<Reservation> reservations) {
         for (Reservation reservation: reservations) {
             if(reservation.getReservationID() == reservationID)

@@ -1,82 +1,117 @@
 package hotelappfinal;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class HotelAppFinal {
 
     static int countF = 1;
     static ArrayList<Guest> guest;
     static ArrayList<Reservation> reservation; // all reservations not just the guest using the app
-    static ArrayList<Room> room;
+    static ArrayList<Room> room; // rooms in the hotel
     static Scanner input = new Scanner(System.in);
-
+    static ArrayList<User> users = new ArrayList<>(); // to save all the users that have used the app
+    static ArrayList<Service> services = new ArrayList<>();// all the services not just the guest using the app
+    static ArrayList<FeedBack> feedBacks = new ArrayList<>();// all the feedbacks not just the guest using the app
+    static ArrayList<Invoice> invoices = new ArrayList<>();
+    
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        ArrayList<User> users = new ArrayList<>();
-
-        //add rooms
+        
         System.out.println("----- Welcome to our Hotel App! -----");
         System.out.print("1. Login to your existing account \n2. Create an account and sign up \nChoose a number: ");
-        int choice = in.nextInt();
+        int choice = input.nextInt();
+
         switch (choice) {
-            case 1:
+            case 1: //this case is used if the user already has an account
                 System.out.print("Enter your email or phone number: ");
-                String emailOrPhone = in.nextLine();
+                String emailOrPhone = input.nextLine();
                 for (User user : users) {
-                    if (emailOrPhone == user.getUserEmail() | emailOrPhone == user.getUserPhone()) {
+                    if (emailOrPhone == user.getUserEmail() | emailOrPhone == user.getUserPhone()) { //checks if there is an account under the given email/phone in the user arraylist
                         System.out.println("Login successfull!");
                         switch (user.getRole()) {
                             case "Guest":
-                                Guest g = (Guest) user;
-                                Guest(users, g);
+                                Guest g = (Guest) user; //used to make sure that the details of current user is used and not a past user
+                                Guest(users, g); //if the user is a guest they will be taken to the guest module
                                 break;
                             case "Receptionist":
-                                Receptionist r = (Receptionist) user;
-                                Receptionist(users, r);
+                                Receptionist r = (Receptionist) user; //used to make sure that the details of current user is used and not a past user
+                                Receptionist(users, r); //if the user is a receptionist they will be taken to the receptionist module
                                 break;
                             case "Manager":
-                                Manager m = (Manager) user;
-                                Manager(users, m);
+                                Manager m = (Manager) user; //used to make sure that the details of current user is used and not a past user
+                                Manager(users, m); //if the user is a manager they will be taken to the manager module
                                 break;
                         }
                     } else {
-                        System.out.println("There is no account!");
+                        System.out.println("There is no account under this email/phone number!");
                     }
                 }
                 break;
-            case 2:
+            case 2: //this case is used when the user is creating a new account
                 LocalDate date = LocalDate.now();
                 String dateString = date.toString();
                 System.out.println("Enter the following details: \nID:");
-                String ID = in.nextLine();
+                String ID = input.nextLine();
                 System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
-                int role = in.nextInt();
+                int role = input.nextInt();
                 System.out.println("\nName:");
-                String name = in.nextLine();
+                String name = input.nextLine();
                 System.out.println("\nEmail:");
-                String email = in.nextLine();
+                String email = input.nextLine();
                 System.out.println("\nPhone number:");
-                String phone = in.nextLine();
+                String phone = input.nextLine();
                 System.out.println("\nAddress:");
-                String address = in.nextLine();
+                String address = input.nextLine();
+
+                for (User user : users) {
+                    if (email == user.getUserEmail() | phone == user.getUserPhone()) { //checks if there is an already account under the given email/phone in the user arraylist
+                        System.out.println("An account already exists under this email/phone number. would you like to log in? (Enter yes/no)");
+                        String yesOrNo = input.next();
+
+                        if (yesOrNo.toLowerCase().equals("yes")) {
+                            System.out.println("Login successfull!");
+                            switch (user.getRole()) {
+                                case "Guest":
+                                    Guest g = (Guest) user; //used to make sure that the details of current user is used and not a past user
+                                    Guest(users, g); //if the user is a guest they will be taken to the guest module
+                                    break;
+                                case "Receptionist":
+                                    Receptionist r = (Receptionist) user; //used to make sure that the details of current user is used and not a past user
+                                    Receptionist(users, r); //if the user is a receptionist they will be taken to the receptionist module
+                                    break;
+                                case "Manager":
+                                    Manager m = (Manager) user; //used to make sure that the details of current user is used and not a past user
+                                    Manager(users, m); //if the user is a manager they will be taken to the manager module
+                                    break;
+                            }
+                        }
+
+                        else
+                            System.out.println("Thank you for using our hotel app!"); // app stops
+                    }
+                }
 
                 switch (role) {
                     case 1:
-                        users.add(new Guest(ID, dateString, name, email, phone, address, "Guest"));
+                        users.add(new Guest(ID, dateString, name, email, phone, address, "Guest")); 
                         System.out.println("Sign in successfull!");
-                        Guest(users, (Guest) users.getLast());
+                        StatsDocument();// to update hotel stats on the txt doc
+                        Guest(users, (Guest) users.getLast()); //creates and adds a new user/guest to the user arraylist and takes the user to the guest module
                         break;
                     case 2:
                         users.add(new Receptionist(ID, dateString, name, email, phone, address, "Receptionist"));
-                        System.out.println("Sign in successfull!");
-                        Receptionist(users, (Receptionist) users.getLast());
+                        System.out.println("Sign in successfull!"); 
+                        StatsDocument();// to update hotel stats on the txt doc
+                        Receptionist(users, (Receptionist) users.getLast()); //creates and adds a new user/receptionist to the user arraylist and takes the user to the receptionist module
                         break;
                     case 3:
                         users.add(new Manager(ID, dateString, name, email, phone, address, "Manager"));
-                        System.out.println("Sign in successfull!");
-                        Manager(users, (Manager) users.getLast());
+                        System.out.println("Sign in successfull!"); 
+                        StatsDocument();// to update hotel stats on the txt doc
+                        Manager(users, (Manager) users.getLast());//creates and adds a new user/manager to the user arraylist and takes the user to the manager module
                         break;
                     default:
                         System.out.println("Invalid role!");
@@ -89,9 +124,8 @@ public class HotelAppFinal {
     }
 
     public static void Guest(ArrayList<User> users, Guest guest) {
-        Scanner in = new Scanner(System.in);
-
-        System.out.println("----- Welcome " + users.getLast().getUserName() + "! -----");
+        
+        System.out.println("----- Welcome " + guest.getUserName() + "! -----");
         System.out.println("What would you like to do? (Enter a number; 0 to exit)"
                 + "\n1. Search for available rooms "
                 + "\n2. Make a reservation"
@@ -102,20 +136,20 @@ public class HotelAppFinal {
                 + "\n7. Make a payment"
                 + "\n8. Submit feedback"
                 + "\n9. Update contact information");
-        int choice = in.nextInt();
+        int choice = input.nextInt();
 
-        while (choice != 0) {
+        while (choice != 0) { //the while loop insures that the user can do multiple services without having to restart the app multiple times
             switch (choice) {
                 case 1:
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- Search Available Rooms --- ");
                     System.out.print("Enter a check in date: ");
-                    String checkInDate = in.nextLine();
+                    String checkInDate = input.nextLine();
                     System.out.print("Enter a check out date: ");
-                    String checkOutDate = in.nextLine();
+                    String checkOutDate = input.nextLine();
                     System.out.print("Enter the number of guests: ");
-                    int noOfGuests = in.nextInt();
+                    int noOfGuests = input.nextInt();
 
                     System.out.println("Rooms available: ");
 
@@ -125,52 +159,60 @@ public class HotelAppFinal {
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- Make a Reservation --- ");
-                    LocalDate date = LocalDate.now();
-                    String dateNow = date.toString();
+                    LocalDate date = LocalDate.now(); // to give an accurate booking date
+                    String dateNow = date.toString(); 
 
                     System.out.print("Enter a check in date: ");
-                    checkInDate = in.nextLine();
+                    checkInDate = input.nextLine();
                     System.out.print("Enter a check out date: ");
-                    checkOutDate = in.nextLine();
+                    checkOutDate = input.nextLine();
                     System.out.print("Enter the number of guests: ");
-                    noOfGuests = in.nextInt();
+                    noOfGuests = input.nextInt();
                     System.out.println("Any special requests? ");
-                    String specialRequests = in.nextLine();
+                    String specialRequests = input.nextLine();
 
-                    System.out.println("Rooms available: ");
+                    System.out.println("Rooms available: "); // so the guest can choose a room that isn't reserved
 
                     guest.SearchAvailableRooms(checkInDate, checkOutDate, noOfGuests, room, reservation);
                     System.out.println("Which room would you like? (Enter the room number)");
-                    String roomNumber = in.nextLine();
+                    String roomNumber = input.nextLine();
 
                     for (Room rooms : room) {
                         if (rooms.getRoomNumber() == roomNumber) {
-                            reservation.add(new Reservation(guest.getUserId(), checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms));
+                            reservation.add(new Reservation(guest.getUserId(), checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms)); //creates and adds a reseravtion to the arraylist
                         }
                     }
+                    
+                    invoices.add(guest.getGuestReservation().getLast().getInvoice());//to save all the invoices in the hotel
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 case 3:
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- Cancel a Reservation --- ");
                     System.out.print("Enter your reservation ID: ");
-                    String reservationID = in.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    String reservationID = input.nextLine();
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to identify which room to cancel
                         if (reservation.getReservationID() == reservationID) {
-                            guest.getGuestReservation().remove(reservation);
+                            reservation.setReservationStatus("Cancelled");
                             System.out.println("Cancellation successfull!");
                         } else {
                             System.out.println("There is no reservation under this ID.");
                         }
                     }
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 case 4:
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- View Reservation Details --- ");
                     System.out.print("Enter your reservation ID: ");
-                    reservationID = in.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    reservationID = input.nextLine();
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to identify which room details to view
                         if (reservation.getReservationID() == reservationID) {
                             System.out.println(reservation);
                         } else {
@@ -183,25 +225,30 @@ public class HotelAppFinal {
 
                     System.out.println(" --- Request a Service --- ");
                     System.out.print("Enter your reservation ID: ");
-                    reservationID = in.nextLine();
+                    reservationID = input.nextLine();
 
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to save the services requested to the reservation for the guest
                         if (reservation.getReservationID() == reservationID) {
-                            reservation.requestAService();
+                            Service s = reservation.requestAService();
+                            reservation.getService().add(s);
+                            services.add(s);// to save all the services requested in the hotel
                             System.out.println("Request successfull!");
                         } else {
                             System.out.println("There is no reservation under this ID.");
                         }
                     }
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 case 6:
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- View Invoice and Payment Status --- ");
                     System.out.print("Enter your reservation ID: ");
-                    reservationID = in.nextLine();
+                    reservationID = input.nextLine();
 
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to identify which invoice to view
                         if (reservation.getReservationID() == reservationID) {
                             guest.ViewInvoice(reservation);
                         } else {
@@ -214,39 +261,50 @@ public class HotelAppFinal {
 
                     System.out.println(" --- Make a Payment --- ");
                     System.out.print("Enter your reservation ID: ");
-                    reservationID = in.nextLine();
+                    reservationID = input.nextLine();
 
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to identify which invoice to view and pay
                         if (reservation.getReservationID() == reservationID) {
                             guest.MakeAPayment(reservation);
                         } else {
                             System.out.println("There is no reservation under this ID.");
                         }
                     }
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 case 8:
                     System.out.println("--------------------------------------------------------------\n");
 
                     System.out.println(" --- Submit Feedback --- ");
                     System.out.print("Enter your reservation ID: ");
-                    reservationID = in.nextLine();
+                    reservationID = input.nextLine();
 
-                    for (Reservation reservation : guest.getGuestReservation()) {
+                    for (Reservation reservation : guest.getGuestReservation()) { //uses reservation ID to save the feedback submitted to the reservation for the guest
                         if (reservation.getReservationID() == reservationID) {
-                            reservation.submitGuestFeedback();
+                            FeedBack f = reservation.submitGuestFeedback();
+                            reservation.setGuestFeedBack(f);
+                            feedBacks.add(f);// to save all the feedback the hotel recieves
                         } else {
                             System.out.println("There is no reservation under this ID.");
                         }
                     }
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 case 9:
-                    guest.updateupdateContactInfo();
+                    guest.updateupdateContactInfo();//if the guest wants to edit any personal info
+                    
+                    StatsDocument();// to update hotel stats on the txt doc
+                    
                     break;
                 default:
                     System.out.println("Invalid option!");
             }
 
-            System.out.println("Would you like to do anything else?(Enter a number; 0 to exit)"
+            System.out.println("Would you like to do anything else?(Enter a number; 0 to exit)" 
                     + "\n1. Search for available rooms "
                     + "\n2. Make a reservation"
                     + "\n3. Cancel a reservation"
@@ -256,7 +314,7 @@ public class HotelAppFinal {
                     + "\n7. Make a payment"
                     + "\n8. Submit feedback"
                     + "\n9. Update contact information");
-            choice = in.nextInt();
+            choice = input.nextInt();
         }
     }
 
@@ -332,4 +390,90 @@ public class HotelAppFinal {
         System.out.println("Occupancy Rate : " + occupancyRate + "% ");
     }
 
+    public static void StatsDocument() { // to save hotel stats on a txt doc
+        
+        try {
+            PrintWriter print = new PrintWriter("/Users/lamyaalhamad/Desktop/NetBeans/HotelAppFinal");
+            
+            ListIterator<Room> it1 = room.listIterator();
+            print.println("=== Rooms in the Hotel ==="); // prints all the rooms
+            int i = 1;
+            while (it1.hasNext()) {
+                print.println(i + ". " + it1.next());
+                i++;
+            }
+            
+            ListIterator<Reservation> it2 = reservation.listIterator();
+            print.println("=== Rservations Made ==="); // prints all the reservations
+            int j = 1;
+            while (it2.hasNext()) {
+                print.println(j + ". " + it2.next());
+                j++;
+            }
+            
+            ListIterator<Service> it3 = services.listIterator();
+            print.println("=== Services requested ===");// prints all the services
+            int h = 1;
+            while (it3.hasNext()) {
+                print.println(h + ". " + it3.next() + "\n");
+                h++;
+            }
+            
+            ListIterator<FeedBack> it4 = feedBacks.listIterator();
+            print.println("=== Feedacks Sent ===");// prints all the feedbacks
+            int s = 1;
+            while (it4.hasNext()) {
+                print.println(s + ". " + it4.next() + "\n");
+                s++;
+            }
+            
+            int m = 0;
+            int r = 0;
+            int g = 0;
+            for(User user: users){
+                
+                print.println("=== Managers in the hotel ===");// prints all the manager
+                if(user instanceof Manager){
+                    print.println(user);
+                    m++;
+                }
+                
+                print.println("=== Receptionist in the hotel ===");// prints all the receptionists
+                if (user instanceof Receptionist) {
+                    print.println(user);
+                    r++;
+                }
+                
+                print.println("=== Guests in the hotel ===");// prints all the guests
+                if (user instanceof Guest){
+                    print.println(user);
+                    g++;
+                }
+            }
+            
+            ListIterator<Invoice> it5 = invoices.listIterator();
+            print.println("=== Invoices ===");// prints all the invoices
+            int x = 1;
+            while (it5.hasNext()) {
+                print.println(x + ". " + it5.next() + "\n");
+                x++;
+            }
+            
+            print.println("Total stats:" //prints the totals
+                    + "\nNumber of Rooms: " + Room.getRoomCounter()
+                    + "\nNumber of Reservations (Past and current): " + Reservation.getReservationCounter()
+                    + "\nNumber of Services: " + services.size()
+                    + "\nNumber of Feedbacks: " + feedBacks.size()
+                    + "\nNumber of User: " + users.size()
+                    + "\nNumber of Managers: " + m
+                    + "\nNumber of Receptionists: " + r
+                    + "\nNumber of Guests: " + g
+                    + "\nNumber of Invoices: " + Invoice.getInvoiceCounter());
+        } 
+        
+        catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        
+    }
 }

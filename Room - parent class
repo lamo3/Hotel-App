@@ -1,4 +1,4 @@
-package hotelapp;
+package hotelappfinal;
 
 public class Room implements Comparable<Room> {
 
@@ -191,12 +191,12 @@ public class Room implements Comparable<Room> {
     }
 
     @Override
-    public String toString() {
+    public String toString() { //displays room details
         return "Room number: " + roomNumber + "\nRoom Type" + roomType + "\nPrice per night: " + pricePerNight;
     }
 
     @Override
-    public int compareTo(Room other) {
+    public int compareTo(Room other) { //orders rooms based on price in ascending order 
         if (other.getPricePerNight() > this.getPricePerNight()) {
             return -1;
         } else if (other.getPricePerNight() < this.getPricePerNight()) {

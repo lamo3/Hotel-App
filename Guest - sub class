@@ -91,12 +91,12 @@ public class Guest extends User {
     
     
     // lamia methods 
-    
-   public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
+    // This method is used by the guest when looking for rooms and making reservations 
+    public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
 
-        Collections.sort(rooms);
-        int count = 0;
-        for (Room room1 : rooms) {
+        Collections.sort(rooms); // to display from highest price to lowest price
+        int count = 0; //to check how many rooms available
+        for (Room room1 : rooms) {//checks the rooms that have an available status
             if (room1.getRoomStatus() == "Available") {
                 System.out.println((count+1) + ". " + room1 + "\n");
                 count++;
@@ -104,8 +104,8 @@ public class Guest extends User {
 
         }
 
-        Collections.sort(reservations);
-        for (Reservation reservation1 : reservations) {
+        Collections.sort(reservations);// to display from highest price to lowest price
+        for (Reservation reservation1 : reservations) { // checks the reservations that have different check in/out dates than what the guest requested
             if (CheckInDate == reservation1.getCheckInDate() & CheckOutDate == reservation1.getCheckOutDate() & guests == reservation1.getNumberOfGuests()) {
                 continue;
             } else {
@@ -120,21 +120,24 @@ public class Guest extends User {
         }
     }
 
+    //used by the guest to view reservation details
     @Override
     public String toString() {
         return super.toString() + "\nReservation: " + guestReservation.getLast() + "\nService Request: " + guestReservation.getLast().getService().getLast();
     }
 
+    //used by guest to view the onvoice of their reservation
     public void ViewInvoice(Reservation r) {
         System.out.println(r.getInvoice());
     }
 
+    //used by the guest to pay their invoice
     public void MakeAPayment(Reservation r) {
-        if (r.getInvoice().getPaymentStatus() == "Unpaid") {
+        if (r.getInvoice().getPaymentStatus() == "Unpaid") { //check that the payment is unpaid
             System.out.print("Choose a payment method: \n1.Cash \n2.Card \n3.Online Transfer");
             int paymentChoice = input.nextInt();
 
-            switch (paymentChoice) {
+            switch (paymentChoice) { //set the payment method based on choice
                 case 1:
                     r.getInvoice().setPaymentMethod("Cash");
                     break;
@@ -151,7 +154,7 @@ public class Guest extends User {
             System.out.print("How much would you like to pay?");
             double payment = input.nextDouble();
 
-            while (payment < 0 | payment > r.getInvoice().getTotalAmount()) {
+            while (payment < 0 | payment > r.getInvoice().getTotalAmount()) { // makes sure that the guest doesnt enter a number that is too much or too little
                 if (payment > r.getInvoice().getTotalAmount()) {
                     System.out.println("That exceeds your bills!");
                 } else {
@@ -162,14 +165,14 @@ public class Guest extends User {
                 payment = input.nextDouble();
             }
 
-            if (payment == r.getInvoice().getTotalAmount()) {
+            if (payment == r.getInvoice().getTotalAmount()) { //status changes based on amount
                 r.getInvoice().setPaymentStatus("Paid");
             } else if (payment < r.getInvoice().getTotalAmount() & payment > 0) {
                 r.getInvoice().setPaymentStatus("Partially Paid");
             }
 
             System.out.println("Payment succefull!");
-            ViewInvoice(r);
+            ViewInvoice(r); //view invoice after payment
         }
     }
 }

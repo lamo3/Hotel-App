@@ -1,9 +1,8 @@
 package hotelappfinal;
 
+import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  *
@@ -22,11 +21,10 @@ public class Reservation implements Comparable<Reservation> {
     private String bookingDate;
     private User user;
     private Room room;// yes 
-    private Invoice invoice;// i add set and get, but lamia add this 
-    private ArrayList<Service> services;// i add a get and add method , but lamia add this 
-    private static ArrayList<Service> allServices;
-    private static ArrayList<Invoice> allInvoices;
-    private static int reservationCounter;
+    private Invoice invoice;//invoice for current reservation
+    private ArrayList<Service> services;//saves all services for all reservations 
+    private static ArrayList<Invoice> allInvoices;//saves all invoices for all reservations 
+    private static int reservationCounter;// counts total reservations made and helps with ID generation
     private FeedBack guestFeedBack; // i add set and get and add this one 
     private static int countS = 1;// halah add
     private static int countF = 1;// Hlaha dd
@@ -61,6 +59,7 @@ public class Reservation implements Comparable<Reservation> {
         }
     }
 
+    //verifies date
     public void setCheckInDate(String CheckInDate) {
         int day = Integer.parseInt(CheckInDate.substring(0, 2));
         int month = Integer.parseInt(CheckInDate.substring(3, 5));
@@ -99,6 +98,7 @@ public class Reservation implements Comparable<Reservation> {
 
     }
 
+    //verifies date
     public void setCheckOutDate(String CheckOutDate) {
         int day = Integer.parseInt(CheckOutDate.substring(0, 2));
         int month = Integer.parseInt(CheckOutDate.substring(3, 5));
@@ -148,7 +148,7 @@ public class Reservation implements Comparable<Reservation> {
         }
     }
 
-    //Used by receptionist
+    //Used by receptionist to change when the guest come and by the guest to cancel their reservation
     public void setReservationStatus(String ReservationStatus) {
         switch (ReservationStatus) {
             case "Confirmed":
@@ -291,12 +291,12 @@ public class Reservation implements Comparable<Reservation> {
     }
 
     @Override
-    public String toString() {
+    public String toString() { // to display details of the reservation
         return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests;
     }
 
     @Override
-    public int compareTo(Reservation other) {
+    public int compareTo(Reservation other) { //orders reservations based on price in ascending order
         if (other.getRoom().getPricePerNight() > this.getRoom().getPricePerNight()) {
             return -1;
         } else if (other.getRoom().getPricePerNight() < this.getRoom().getPricePerNight()) {
@@ -391,4 +391,5 @@ public class Reservation implements Comparable<Reservation> {
         return null;
 
     }
+    
 }

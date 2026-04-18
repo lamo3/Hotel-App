@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package hotelapp;
+package hotelappfinal;
 
 import java.util.ArrayList;
 
@@ -23,7 +23,7 @@ public class Invoice {
     private double totalAmount;
     private String paymentStatus;
     private String paymentMethod;
-    private static int invoiceCounter;
+    private static int invoiceCounter; //to keep track of number of invoices and helps with generating ID
 
     public Invoice(String reservationID, double price, String checkInDate, String checkOutDate, ArrayList<Service> services, String guestID) {
         invoiceCounter++;
@@ -150,6 +150,7 @@ public class Invoice {
         return invoiceCounter;
     }
 
+    //used to help the guest view invoice
     @Override
     public String toString() {
         return "Invoice ID: " + invoiceID + "\nReservation ID: " + associatedReservationID + "\nGuest ID: " + associatedGuestID + "\nRoom charges: " + roomCharges + "\nService charges: " + serviceCharges + "\nTax amount (15%): " + taxAmount + "\nDiscount amount (10%): " + discountAmount + "\nTotal amount: " + totalAmount + "\nPayment status: " + paymentStatus + "\nPayment method: " + paymentMethod;

@@ -56,14 +56,18 @@ public class Manager extends User {
     }
 
     // lamia method
+    //helps manager carry out their job
     public void ManageRoomInventory(LinkedList<Room> rooms) {
         Scanner in = new Scanner(System.in);
 
-        System.out.println("Would you like to (Enter a number): \n1.Add a new room? \n2.Update room details? \n3.Remove a room?");
+        System.out.println("Would you like to (Enter a number): "
+                + "\n1.Add a new room? "
+                + "\n2.Update room details? "
+                + "\n3.Remove a room?");
         int choice = in.nextInt();
 
         switch (choice) {
-            case 1:
+            case 1:// add new room
                 System.out.print("Enter the following: \nRoom Type: ");
                 String roomType = in.nextLine();
                 System.out.print("\nFloor Number: ");
@@ -72,7 +76,7 @@ public class Manager extends User {
                 String bedType = in.nextLine();
                 rooms.add(new Room(roomType, floorNumber, bedType));
                 break;
-            case 2:
+            case 2:// update room details
                 System.out.println("Which room would you like to update? (Enter the room number)");
                 for (Room room1 : rooms) {
                     System.out.println(room1);
@@ -84,12 +88,12 @@ public class Manager extends User {
                         System.out.println("What would you like to update? (Enter a number)\n1.Price \n2.Amenities \n3.Bed Type");
                         int choice1 = in.nextInt();
                         switch (choice1) {
-                            case 1:
+                            case 1://update price
                                 System.out.print("Enter the price: ");
                                 double price = in.nextDouble();
                                 room1.setPricePerNight(price);
                                 break;
-                            case 2:
+                            case 2://update amenities
                                 String[] amenities = new String[4];
                                 System.out.print("Enter the Amenities: \n1. ");
                                 String amenities1 = in.nextLine();
@@ -102,7 +106,7 @@ public class Manager extends User {
                                 }
                                 room1.setAmenities(amenities);
                                 break;
-                            case 3:
+                            case 3://update bed type
                                 System.out.print("Enter the bed type: ");
                                 String bedType1 = in.nextLine();
                                 room1.setBedType(bedType1);
@@ -112,7 +116,7 @@ public class Manager extends User {
                     }
                 }
                 break;
-            case 3:
+            case 3://remove a room
                 System.out.println("Which room would you like to remove? (Enter the room number)");
                 for (Room room1 : rooms) {
                     System.out.println(room1);
@@ -172,6 +176,7 @@ public class Manager extends User {
         }
     }
 
+    //helps manager edit roles
     public void ManageSystemUsersAndRoles(ArrayList<User> users) {
         Scanner in = new Scanner(System.in);
         System.out.println("--------------------------------------------------------------\n");
@@ -185,8 +190,8 @@ public class Manager extends User {
         int choice = in.nextInt();
         
         switch (choice) {
-            case 1:
-                LocalDate date = LocalDate.now();
+            case 1://Add a user
+                LocalDate date = LocalDate.now();// to get current date
                 String dateString = date.toString();
                 System.out.println("Enter the following details: \nID:");
                 String ID = in.nextLine();
@@ -202,15 +207,15 @@ public class Manager extends User {
                 String address = in.nextLine();
 
                 switch (role) {
-                    case 1:
+                    case 1://guest
                         users.add(new Guest(ID, dateString, name, email, phone, address, "Guest"));
                         System.out.println("User added!");
                         break;
-                    case 2:
+                    case 2://receptionist
                         users.add(new Receptionist(ID, dateString, name, email, phone, address, "Receptionist"));
                         System.out.println("User added!");
                         break;
-                    case 3:
+                    case 3://manager
                         users.add(new Manager(ID, dateString, name, email, phone, address, "Manager"));
                         System.out.println("User added!");
                         break;
@@ -218,7 +223,7 @@ public class Manager extends User {
                         System.out.println("Invalid role!");
                 }
                 break;
-            case 2:
+            case 2://edit a user
                 System.out.print("Enter the ID for the user you want to edit: ");
                 ID = in.nextLine();
                 for(User user: users){
@@ -231,22 +236,22 @@ public class Manager extends User {
                         choice = in.nextInt();
                         
                         switch (choice) {
-                            case 1:
+                            case 1:// edit name
                                 System.out.print("Enter a new name: ");
                                 name = in.nextLine();
                                 user.setUserName(name);
                                 break;
-                            case 2:
+                            case 2:// edit email
                                 System.out.print("Enter a new email: ");
                                 email = in.nextLine();
                                 user.setUserEmail(email);
                                 break;
-                            case 3:
-                                System.out.print("Enter a new phine number: ");
+                            case 3://edit phone number 
+                                System.out.print("Enter a new phone number: ");
                                 phone = in.nextLine();
                                 user.setUserPhone(phone);
                                 break;
-                            case 4:
+                            case 4:// edit address
                                 System.out.print("Enter a new Address: ");
                                 address = in.nextLine();
                                 user.setUserAddress(address);
@@ -258,9 +263,9 @@ public class Manager extends User {
                         System.out.println("there is no user under this ID");
                 }
                 break;
-            case 3:
+            case 3://remove a user
                 int counter = 0;
-                for(User user: users){
+                for(User user: users){// makes sure that if there is only one manager then they can't be deleted
                     if(user instanceof Manager)
                         counter++;
                 }
@@ -282,7 +287,7 @@ public class Manager extends User {
                 }
                 
                 break;
-            case 4:
+            case 4:// assign a role
                 System.out.print("Enter the ID of the user you want to edit the role for: ");
                 ID = in.nextLine();
                 for(User user: users){
@@ -294,13 +299,13 @@ public class Manager extends User {
                         role = in.nextInt();
                         
                         switch(role){
-                            case 1:
+                            case 1://assign guest role
                                 user.setRole("Guest");
                                 break;
-                            case 2:
+                            case 2://assign receptionist role
                                 user.setRole("Receptionist");
                                 break;
-                            case 3:
+                            case 3://assign manager role
                                 user.setRole("Manager");
                                 break;
                             default :

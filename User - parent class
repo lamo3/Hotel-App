@@ -95,7 +95,7 @@ public abstract class User {
     }
     
      @Override
-    public String toString() {
+    public String toString() { // displays user details
         return "User ID: " + userId + "\nJoin Date: " + userJoiningDate + "\nName: " + userName + "\nEmail: " + userEmail + "\nPhone number: " + userPhone + "\nAdress: " + userAddress + "\nRole: " + role;
     }
     

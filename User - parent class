@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 import java.time.LocalDate;
 public abstract class User {
     
@@ -23,32 +22,32 @@ public abstract class User {
     
 
     public void setUserId(String userId) {
-        if((userId!=null)&&(!userId.equals("")&&(isDigit(userId))))
+        if((userId!=null)&&(!userId.equals("")&&(isDigit(userId))))// To ensure user ID is vaild.
         this.userId = userId;
     }
 
     public void setUserJoiningDate(String userJoiningDate) {
-        if((userJoiningDate!=null)&&(!userJoiningDate.equals("")))
+        if((userJoiningDate!=null)&&(!userJoiningDate.equals("")))// To ensure that the date is vaild.
         this.userJoiningDate = userJoiningDate;
     }
 
     public void setUserName(String userName) {
-        if((userName!=null)&&(!userName.equals("")))
+        if((userName!=null)&&(!userName.equals("")))// To ensure user name is vaild.
         this.userName = userName;
     }
 
     public void setUserEmail(String userEmail) {
-        if((userEmail!=null)&(!userEmail.equals(""))&&(userEmail.contains("@")))
+        if((userEmail!=null)&(!userEmail.equals(""))&&(userEmail.contains("@")))// To ensure user email is vaild. And it contains @.
         this.userEmail = userEmail;
     }
 
     public void setUserPhone(String userPhone) {
-        if((userPhone!=null)&&(!userPhone.equals(""))&&isDigit(userPhone))
+        if((userPhone!=null)&&(!userPhone.equals(""))&&isDigit(userPhone))// To ensure user number is vaild. And it is only contains numbers.
         this.userPhone = userPhone;
     }
 
     public void setUserAddress(String userAddress) {
-        if((userAddress!=null)&&(!userAddress.equals("")))
+        if((userAddress!=null)&&(!userAddress.equals("")))// To ensure user address is vaild.
         this.userAddress = userAddress;
     }
 
@@ -86,8 +85,8 @@ public abstract class User {
     
     
     
-    public boolean isDigit(String value){
-        for(int i=0;i<value.length();i++){
+    public boolean isDigit(String value){// A method to cheack user number if it's only contains numbers.
+        for(int i=0;i<value.length();i++){// Loop throug the number 
             if(!Character.isDigit(value.charAt(0)))
                 return false;
         }
@@ -95,7 +94,7 @@ public abstract class User {
     }
     
      @Override
-    public String toString() { // displays user details
+    public String toString() { // displays user details.
         return "User ID: " + userId + "\nJoin Date: " + userJoiningDate + "\nName: " + userName + "\nEmail: " + userEmail + "\nPhone number: " + userPhone + "\nAdress: " + userAddress + "\nRole: " + role;
     }
     

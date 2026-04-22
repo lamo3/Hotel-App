@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.Collections;
 
 
-public class Guest extends User {
+public class Guest extends User {// guest is a user.
     
     Scanner input=new Scanner(System.in);
    

@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -12,7 +11,7 @@ public class Guest extends User {
    
     
   
-    private ArrayList<Reservation> guestReservation = new ArrayList();//Guest may have old reservation.
+    private ArrayList<Reservation> guestReservation = new ArrayList(); // using ArrayList of reservation. To keep all guest's past and current booking.
     
     public Guest(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
@@ -45,29 +44,29 @@ public class Guest extends User {
         
        int selection=input.nextInt();
        
-        switch(selection){
+        switch(selection){// we use switch for fatser and more accurate access for guest choice.
             
             case 1:
                 System.out.println(" Kindly enter the email you wish to update. ");
                 String updatedEmail=input.nextLine();
                 
-                super.setUserEmail(updatedEmail);
+                super.setUserEmail(updatedEmail);// using the setters to update.
                 System.out.println(" *** email has been successfully updated ***");
                 break;
             case 2:
                 System.out.println(" Kindly enter the phone number you wish to update. ");
                 String updatedPhoneNumber=input.nextLine();
-                super.setUserPhone(updatedPhoneNumber);
+                super.setUserPhone(updatedPhoneNumber);// using the setters to update.
                 System.out.println(" *** phone number has been successfully updated *** ");
                 break;
             case 3:
                 System.out.println(" Kindly enter the address you wish to update. ");
                 String updatedAddress=input.nextLine();
-                super.setUserAddress(updatedAddress);
+                super.setUserAddress(updatedAddress);// using the setters to update.
                 System.out.println(" *** address has been successfully updated *** ");
                 break;
             case 4:
-                    String[]updateAll=new String[3];
+                    String[]updateAll=new String[3];//using array to store easily.
                     System.out.println(" Kindly enter the email you wish to update. ");
                     updateAll[0]=input.nextLine();
                     super.setUserEmail(updateAll[0]);
@@ -80,7 +79,7 @@ public class Guest extends User {
                     System.out.println(" *** All information has been successfully updated *** ");
                     break;
                     default:
-                        System.out.println(" Sorry. The option you entered is not available! ");
+                        System.out.println(" Sorry. The option you entered is not available! ");// if guest coice is not availble.Display this statment.
                         break;
                       
         }
@@ -90,7 +89,8 @@ public class Guest extends User {
     }
     
     
-    // lamia methods 
+    // lamia's methods 
+    
     // This method is used by the guest when looking for rooms and making reservations 
     public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
 
@@ -179,3 +179,4 @@ public class Guest extends User {
     
   
     
+

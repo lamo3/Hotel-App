@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 public class Room implements Comparable<Room> {
 
     private static int roomCounter; //helps identify room number

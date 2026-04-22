@@ -1,8 +1,5 @@
 package hotelapp;
-
 import java.util.Scanner;
-
-
 
 
 public class Service {
@@ -33,37 +30,37 @@ public class Service {
     
     
     public void setServiceId(String serviceId) {
-        if((serviceId!=null)&&(!serviceId.equals("")))
+        if((serviceId!=null)&&(!serviceId.equals("")))// To ensure service ID is vaild.
         this.serviceId = serviceId;
     }
 
     public void setServiceName(String serviceName) {
-        if((serviceName!=null)&&(!serviceName.equals("")))
+        if((serviceName!=null)&&(!serviceName.equals("")))// To ensure the service name is vaild.
         this.serviceName = serviceName;
     }
 
     public void setDescription(String description) {
-        if((description!=null)&&(!description.equals("")))
+        if((description!=null)&&(!description.equals("")))// To ensure the description is vaild.
         this.description = description;
     }
 
     public void setPrice(double price) {
-        if(price>0)
+        if(price>0)// price must be grater than 0.
         this.price = price;
     }
 
     public void setReservationId(String reservationId) {
-        if((reservationId!=null)&&(!reservationId.equals("")))
+        if((reservationId!=null)&&(!reservationId.equals("")))// To ensure reservation ID is vaild.
         this.reservationId = reservationId;
     }
 
     public void setRequestDate(String requestDate) {
-        if((requestDate!=null)&&(!requestDate.equals("")))
+        if((requestDate!=null)&&(!requestDate.equals("")))// To ensure that the date is vaild.
         this.requestDate = requestDate;
     }
 
     public void setServiceStatus(String serviceStatus) {
-        if((serviceStatus.equals("Requested"))||(serviceStatus.equals("In Progress"))||(serviceStatus.equals("Completed"))||(serviceStatus.equals("Cancelled")))
+        if((serviceStatus.equals("Requested"))||(serviceStatus.equals("In Progress"))||(serviceStatus.equals("Completed"))||(serviceStatus.equals("Cancelled")))// To ensure the entered service ststus is allowed.
         this.serviceStatus = serviceStatus;
     }
 
@@ -100,4 +97,3 @@ public class Service {
     
     
     
-

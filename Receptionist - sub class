@@ -13,15 +13,15 @@ public class Receptionist extends User {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
 
-    public void searchForAGuest(ArrayList<Guest> guest) {
+    public void searchForAGuest(ArrayList<Guest> guest) {// ArrayList of all guests
         System.out.println(" Please Enter the guest ID : ");
         int gId = input.nextInt();
         for (Guest g : guest) {
-            if (g.getUserId().equals(gId)) {
+            if (g.getUserId().equals(gId)) {// to get the required ID.
                 System.out.println("--------------------------------------------------------------");
             }
             System.out.println(" The guest was found. ");
-            System.out.println(" --- Guest Information --- ");
+            System.out.println(" --- Guest Information --- ");// Display guest info.
             System.out.println("Guest Name : " + g.getUserName());
             System.out.println("Guest Email : " + g.getUserEmail());
             System.out.println("Guest Phone Number : " + g.getUserPhone());
@@ -31,7 +31,7 @@ public class Receptionist extends User {
             System.out.println("Guest Services :");
 
             ArrayList<Reservation> reservation = g.getGuestReservation();
-            for (Reservation r : reservation) {
+            for (Reservation r : reservation) {// Show all reservation made by the guest.
                 System.out.println("Guest Reservation :");
 
                 System.out.println("Reservation Id : " + r.getReservationID());
@@ -43,9 +43,9 @@ public class Receptionist extends User {
                 System.out.println("--------------------------------------------------------------");
 
                 ArrayList<Service> services = r.getService();
-                int count = 0;
+                int count = 0; //help in display guest service in order.
                 for (Service s : services) {
-                    count++;
+                    count++;// Increment one everytime.
                     System.out.println("Service " + count + " :");
                     System.out.println(s.getServiceName());
                 }
@@ -58,18 +58,18 @@ public class Receptionist extends User {
     public void processServiceRequests(ArrayList<Service> service) {
 
         System.out.println("Here are the services requests : ");
-        for (Service s : service) {
-            if (s.getServiceStatus().equals("Requested")) {
+        for (Service s : service) {// To go through all services.
+            if (s.getServiceStatus().equals("Requested")) {// To ensure we only get the orders with status "Requested".
                 System.out.println("Service Id : " + s.getServiceId());
                 System.out.println("Service Name : " + s.getServiceName());
                 System.out.println("Service description : " + s.getDescription());
-                System.out.println("Please choose the updated status : ");
+                System.out.println("Please choose the updated status : ");// To update the status.
                 System.out.println("1- In Progress. ");
                 System.out.println("2- Completed. ");
                 System.out.println("3- Cancelled. ");
                 int updatedStatus = input.nextInt();
 
-                switch (updatedStatus) {
+                switch (updatedStatus) {// using a switch for fatser and more accurate access for guest choice.
                     case 1:
                         s.setServiceStatus("In Progress");
                         break;
@@ -87,7 +87,7 @@ public class Receptionist extends User {
 
     }
 
-    // lamia methods
+    // lamia's methods
     // used by the receptionist to create a last minute reservation for a guest
     public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
         

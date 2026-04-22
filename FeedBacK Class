@@ -1,3 +1,4 @@
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -9,9 +10,9 @@ public class FeedBack implements Comparable<FeedBack>{
     private String associatedGuestId;
     private String associatedReservationId;
     private int rating;
-    private String comments; //optional 
+    private String comments; //optional by guest.
     private String submissionDate;
-    private String response;//optional by manager
+    private String response;//optional by manager.
 
     public FeedBack(String feedBackId, String associatedGuestId, String associatedReservationId, int rating, String comments, String submissionDate) {
         this.feedBackId = feedBackId;
@@ -22,7 +23,7 @@ public class FeedBack implements Comparable<FeedBack>{
         this.submissionDate = submissionDate;
     }
 
-    public FeedBack(String feedBackId, String associatedGuestId, String associatedReservationId, int rating, String submissionDate) {// without comment
+    public FeedBack(String feedBackId, String associatedGuestId, String associatedReservationId, int rating, String submissionDate) {// Cons without a comment. Since guest comment is optional.
         this.feedBackId = feedBackId;
         this.associatedGuestId = associatedGuestId;
         this.associatedReservationId = associatedReservationId;
@@ -32,38 +33,38 @@ public class FeedBack implements Comparable<FeedBack>{
 
    
     public void setFeedBackId(String feedBackId) {
-        if((feedBackId!=null)&&(!feedBackId.equals("")))
+        if((feedBackId!=null)&&(!feedBackId.equals("")))// To cheack that the Id is vaild.
         this.feedBackId = feedBackId;
     }
 
     public void setAssociatedGuestId(String associatedGuestId) {
-        if((associatedGuestId!=null)&&(!associatedGuestId.equals("")))
+        if((associatedGuestId!=null)&&(!associatedGuestId.equals("")))//To cheack that the Id is vaild.
         this.associatedGuestId = associatedGuestId;
     }
 
     public void setAssociatedReservationId(String associatedReservationId) {
-        if((associatedReservationId!=null)&&(!associatedReservationId.equals("")))
+        if((associatedReservationId!=null)&&(!associatedReservationId.equals("")))//To cheack that the Id is vaild.
         this.associatedReservationId = associatedReservationId;
     }
 
     public void setRating(int rating) {
-        if(rating>0&&rating<6)
+        if(rating>0&&rating<6)// the rating range from 1 to 5 stars.
         this.rating = rating;
     }
 
     public void setComments(String comments) {
-        if((comments!=null)&&(!comments.equals("")))
+        if((comments!=null)&&(!comments.equals("")))////To cheack that the comment is vaild.
         this.comments = comments;
        
     }
 
     public void setSubmissionDate(String submissionDate) {
-      if(submissionDate!=null)
+      if(submissionDate!=null)////To cheack that the date is vaild.
         this.submissionDate = submissionDate;
     }
 
     public void setResponse(String response) {
-        if((response!=null)&&(!response.equals("")))
+        if((response!=null)&&(!response.equals("")))////To cheack that the response is vaild.
         this.response = response;
     }
 
@@ -101,10 +102,10 @@ public class FeedBack implements Comparable<FeedBack>{
     
     public void responedToGuestFeedBack(){
         
-        System.out.println(" *** Guest FeedBack *** ");
+        System.out.println(" *** Guest FeedBack *** ");// Display Guest feedback info.
         System.out.println("FeedBack Id : "+this.feedBackId);
         System.out.println("Rating : "+this.rating);
-        if((this.comments!=null)&&(!this.comments.equals("")))
+        if((this.comments!=null)&&(!this.comments.equals("")))// Checking if the user has left a comment.
         System.out.println("Guest Comment : "+this.comments);
         else System.out.println("No comment provided.");
         
@@ -112,16 +113,14 @@ public class FeedBack implements Comparable<FeedBack>{
         System.out.println("Please enter your response : ");
         String managerResponse=input.nextLine();
         
-        setResponse(managerResponse);
-        System.out.println("Comment successfully added. ");
+        setResponse(managerResponse);// To add manager responce to guest feedback.
+        System.out.println("Comment successfully added! ");
         
     }
 
     @Override
-    public int compareTo(FeedBack t) {// to display guest rating Descending order
-        if(t==null)
-            return 1;
-        return t.getRating()-this.rating;
+    public int compareTo(FeedBack t) {// using cimpareTo to display guest rating. From higest to lowest.
+      return Integer.compare(t.getRating(), this.rating);
     }
     
     

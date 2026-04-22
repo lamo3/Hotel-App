@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import org.w3c.dom.css.Counter;
 
-public class Manager extends User {
+public class Manager extends User {// manager is a user.
 
     Scanner input = new Scanner(System.in);
 

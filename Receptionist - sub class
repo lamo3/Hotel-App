@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
 
-public class Receptionist extends User {
+public class Receptionist extends User {// Receptionist is a user.
 
     Scanner input = new Scanner(System.in);
 

@@ -14,11 +14,11 @@ public class Manager extends User {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
 
-    public void generateRevenueReport(ArrayList<Reservation> reservation) {//reservation has a room,invoice and Arraylist of service
+    public void generateRevenueReport(ArrayList<Reservation> reservation) {// this method takes an ArrayList, where each reservation includes a room invoice and a list of guest services.
         System.out.println("--- Please enter the reporting period ---");
         System.out.println("Enter start date (YYYY-MM-DD). ");
-        LocalDate startDate = LocalDate.parse(input.next());
-        System.out.println("Enter end date (YYYYMMDD). ");
+        LocalDate startDate = LocalDate.parse(input.next());// To ensure accurancy, the date is stored in localDate.
+        System.out.println("Enter end date (YYYY-MM-DD). ");
         LocalDate endDate = LocalDate.parse(input.next());
         double totalRevenue = 0;
         int totalOccupancyRooms = 0;
@@ -26,20 +26,20 @@ public class Manager extends User {
         int totalServiceUsage = 0;
         int totalOutstandingPayment = 0;
         for (Reservation r : reservation) {
-            LocalDate cheackIn = LocalDate.parse(r.getCheckInDate());
-            LocalDate checkOut = LocalDate.parse(r.getCheckOutDate());
-            if (cheackIn.isAfter(startDate) || cheackIn.isEqual(startDate) && checkOut.isBefore(endDate) || checkOut.isEqual(endDate)) {
+            LocalDate cheackIn = LocalDate.parse(r.getCheckInDate());// Since CheckInDate in reservation class is a String type. we must parse it into LocalDate.
+            LocalDate checkOut = LocalDate.parse(r.getCheckOutDate());//Since CheckOutDate in reservation class is a String type. we must parse it into LocalDate.
+            if (cheackIn.isAfter(startDate) || cheackIn.isEqual(startDate) && checkOut.isBefore(endDate) || checkOut.isEqual(endDate)) {// To ensure we are in the same required period.
 
                 totalRevenue += r.getInvoice().getTotalAmount();
 
                 if (r.getRoom().equals("Occupied")) {
-                    totalOccupancyRooms++;
+                    totalOccupancyRooms++;// Sum the total number of Occupancy rooms.
                 }
-                totalRooms++;
+                totalRooms++;// Count total rooms.
                 ArrayList<Service> service = r.getService();
-                totalServiceUsage += service.size();
+                totalServiceUsage += service.size();// Sum the total number of service. By using .size(); .
                 if (r.getInvoice().getPaymentStatus().equals("Unpaid")) {
-                    totalOutstandingPayment++;
+                    totalOutstandingPayment++; // Sum the total number of unpaid payment status.
                 }
 
             }
@@ -48,7 +48,7 @@ public class Manager extends User {
         System.out.println(" Period [" + startDate + " to " + endDate + "]");
         System.out.println("******************************");
         System.out.println("Total Revenue : " + totalRevenue);
-        System.out.println("Occupancy Rates " + (totalOccupancyRooms / totalRooms * 100) + "%");
+        System.out.println("Occupancy Rates " + (totalOccupancyRooms / totalRooms * 100) + "%");// as a percentage.
         System.out.println("Total Service Usage : " + totalServiceUsage);
         System.out.println("Outstanding Payments : " + totalOutstandingPayment);
         System.out.println("******************************");

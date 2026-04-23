@@ -1,9 +1,11 @@
 package hotelappfinal;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
+import java.util.Locale;
 
 public class Receptionist extends User {// Receptionist is a user.
 
@@ -87,21 +89,33 @@ public class Receptionist extends User {// Receptionist is a user.
 
     }
 
-    // lamia's methods
+    // lamia methods
     // used by the receptionist to create a last minute reservation for a guest
-    public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
-        
-        System.out.println("Enter the check in date, check out dates, as well as the umber of guests:");
+    public void CreateAWalkInReservation(ArrayList<Room> rooms, ArrayList<Reservation> reservations, ArrayList<User> users) {
 
-        System.out.print("Check in date (DD/MM/YYYY): ");
-        String checkInDate = input.nextLine();
+        System.out.println("Enter the following:");
 
-        System.out.print("\nCheck out date (DD/MM/YYYY): ");
-        String checkOutDate = input.nextLine();
+        boolean correct;
+        String checkInDate;
+        String checkOutDate;
+        do {//checks validity of dates
+            System.out.print("Enter a check in date(DD/MM/YYYY): ");
+            checkInDate = input.nextLine();
+            System.out.print("Enter a check out date(DD/MM/YYYY): ");
+            checkOutDate = input.nextLine();
 
-        System.out.println("\nNumber of guests (1-4): ");
-        int numberOfguests = 0;
-        while (numberOfguests <= 1 | numberOfguests >= 4) {
+            if (Reservation.checkDates(checkInDate, checkOutDate)) {
+                correct = false;
+            } else {
+                System.out.println("Invalid dates! try again.");
+                correct = true;
+            }
+
+        } while (correct);
+
+        System.out.print("\nNumber of guests (1-4): ");
+        int numberOfguests = input.nextInt();
+        while (numberOfguests < 1 | numberOfguests > 4) {//checks validity of number of guests
             System.out.println("Invalid number of guests!");
             numberOfguests = input.nextInt();
         }
@@ -109,58 +123,77 @@ public class Receptionist extends User {// Receptionist is a user.
         Collections.sort(rooms); // to display from highest price to lowest price
         int count = 0;
         for (Room room1 : rooms) {
-            if (room1.getRoomStatus() == "Available") {
-                System.out.println(room1 + "\n");
+            if ("Available".equals(room1.getRoomStatus()) & numberOfguests <= room1.getMaxOccupancy()) {
+                System.out.println((count + 1) + ". " + room1 + "\n");
+                count++;
             }
 
-            count++;
         }
 
         Collections.sort(reservations);// to display from highest price to lowest price
         for (Reservation reservation1 : reservations) {
-            if (checkInDate == reservation1.getCheckInDate() & checkOutDate == reservation1.getCheckOutDate() & numberOfguests == reservation1.getNumberOfGuests()) {
+            if (checkInDate.equals(reservation1.getCheckInDate()) & checkOutDate.equals(reservation1.getCheckOutDate()) & !(reservation1.getReservationStatus().equals("Cancelled")) | !(numberOfguests <= reservation1.getRoom().getMaxOccupancy())) {
                 continue;
             } else {
-                System.out.println(reservation1 + "\n");
+                System.out.println((count + 1) + ". " + reservation1.getRoom().toString() + "\n");
+                count++;
             }
-
-            count++;
         }
 
-        if (count != 0) {
-            System.out.println("Enter the room number for the room you would like to reserve: ");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);//to ensure the date is in a specific format
+        LocalDate date = LocalDate.now(); // to give an accurate booking date
+        String dateNow = date.format(formatter);//localdate to string
+        if (count != 0) {// if there are rooms available enter the if statement
+            System.out.print("Enter the room number for the room you would like to reserve: ");
             String roomNumber = input.next();
-            System.out.println("Enter the guest ID: ");
+
+            input.nextLine();
+
+            System.out.print("Enter the guest ID: ");
             String guestID = input.nextLine();
-            System.out.println("Enter the booking date: ");
-            String bookingDate = input.nextLine();
-            System.out.println("Any special requests? ");
+            Guest g = null;
+            boolean found = false;
+
+            while (!found) {
+                for (User user : users) {//finds user and casts it
+                    if (user instanceof Guest && user.getUserId().equals(guestID)) {
+                        g = (Guest) user;
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    System.out.println("There are no guests under this ID. Try again.");
+                    System.out.print("Enter the guest ID: ");
+                    guestID = input.nextLine();
+                }
+            }
+            System.out.print("Any special requests? ");
             String specialRequest = input.nextLine();
 
-            for (Reservation reservation1 : reservations) {// checks to see if there is a room available that is reserved but available on a different day
-                if (roomNumber == reservation1.getRoom().getRoomNumber()) {
-                    reservations.add(new Reservation(guestID, checkInDate, checkOutDate, numberOfguests, specialRequest, bookingDate, reservation1.getRoom()));
-                }
-            }
-
             for (Room room1 : rooms) {
-                if (roomNumber == room1.getRoomNumber()) {// checks to see if there is a room available
-                    reservations.add(new Reservation(guestID, checkInDate, checkOutDate, numberOfguests, specialRequest, bookingDate, room1));
+                if (roomNumber.equals(room1.getRoomNumber())) {// checks to see if there is a room available
+                    reservations.add(new Reservation(g, checkInDate, checkOutDate, numberOfguests, specialRequest, dateNow, room1));
+                    g.getGuestReservation().add(reservations.getLast());
+                    break;
                 }
 
-                rooms.remove(room1);
             }
 
+            String ID = reservations.getLast().getReservationID();
+            System.out.println("\nReservation Successfull! \nReservation ID: " + ID);
         } else {
             System.out.println("There are no rooms available.");
         }
     }
 
-    // lets receptionist check in/out guests as well as change the room status to other states
-    public void ChangeRoomStatus(String roomStatus, String reservationID, ArrayList<Reservation> reservations) {
-        for (Reservation reservation: reservations) {
-            if(reservation.getReservationID() == reservationID)
-                reservation.getRoom().setRoomStatus(roomStatus);
+    // lets receptionist change the rooms status based on different situations
+    public void ChangeRoomStatus(String roomStatus, String roomNumber, ArrayList<Room> rooms) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                room.setRoomStatus(roomStatus);
+            }
         }
     }
 }

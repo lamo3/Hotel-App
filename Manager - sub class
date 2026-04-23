@@ -59,76 +59,104 @@ public class Manager extends User {// manager is a user.
     //helps manager carry out their job
     public void ManageRoomInventory(LinkedList<Room> rooms) {
         Scanner in = new Scanner(System.in);
-
+        boolean notFound = true;// to check that the room specified is exists
+        
         System.out.println("Would you like to (Enter a number): "
                 + "\n1.Add a new room? "
                 + "\n2.Update room details? "
                 + "\n3.Remove a room?");
         int choice = in.nextInt();
-
+        in.nextLine();
+        
         switch (choice) {
             case 1:// add new room
                 System.out.print("Enter the following: \nRoom Type: ");
                 String roomType = in.nextLine();
                 System.out.print("\nFloor Number: ");
                 int floorNumber = in.nextInt();
-                System.out.println("\nBed Type: ");
+                in.nextLine();
+                System.out.print("\nBed Type: ");
                 String bedType = in.nextLine();
                 rooms.add(new Room(roomType, floorNumber, bedType));
+                System.out.println("Room was added!");
                 break;
             case 2:// update room details
                 System.out.println("Which room would you like to update? (Enter the room number)");
+                int count = 0;
                 for (Room room1 : rooms) {
-                    System.out.println(room1);
+                    count++;
+                    System.out.println(count + ". " + room1 + "\n");
                 }
                 String roomNumber = in.nextLine();
 
                 for (Room room1 : rooms) {
-                    if (roomNumber == room1.getRoomNumber()) {
+                    if (roomNumber.equals(room1.getRoomNumber())) {
                         System.out.println("What would you like to update? (Enter a number)\n1.Price \n2.Amenities \n3.Bed Type");
                         int choice1 = in.nextInt();
+                        in.nextLine();
+                        
                         switch (choice1) {
                             case 1://update price
                                 System.out.print("Enter the price: ");
                                 double price = in.nextDouble();
                                 room1.setPricePerNight(price);
+                                System.out.println("Change successfull!");
                                 break;
                             case 2://update amenities
                                 String[] amenities = new String[4];
-                                System.out.print("Enter the Amenities: \n1. ");
-                                String amenities1 = in.nextLine();
+                                System.out.println("Enter the Amenities (Enter empty line to stop): ");
                                 int i = 0;
-                                while (amenities1 == null | amenities1 == "") {
+                                System.out.print("1. ");
+                                String amenities1 = in.nextLine();
+                                while (!("".equals(amenities1)) & i < 4) {// allows the manager to add up to 4 amenities per room
                                     amenities[i] = amenities1;
                                     i++;
                                     System.out.print((i + 1) + ". ");
                                     amenities1 = in.nextLine();
                                 }
                                 room1.setAmenities(amenities);
+                                System.out.println("Change successfull!");
                                 break;
                             case 3://update bed type
                                 System.out.print("Enter the bed type: ");
                                 String bedType1 = in.nextLine();
                                 room1.setBedType(bedType1);
+                                System.out.println("Change successfull!");
+                                break;
                             default:
                                 System.out.println("Invalid choice!");
                         }
+                        
+                        notFound = false;
                     }
                 }
+                
+                if(notFound)
+                    System.out.println("Invalid room number!");
+                
                 break;
             case 3://remove a room
+                notFound = true;
                 System.out.println("Which room would you like to remove? (Enter the room number)");
-                for (Room room1 : rooms) {
-                    System.out.println(room1);
+                count = 0;
+                for (Room room1 : rooms) {//lists all rooms
+                    count++;
+                    System.out.println(count + ". " + room1 + "\n");
                 }
                 String roomNumber1 = in.nextLine();
 
-                for (Room room1 : rooms) {
-                    if (roomNumber1 == room1.getRoomNumber()) {
+                for (Room room1 : rooms) {//finds room and removes it
+                    if (roomNumber1.equals(room1.getRoomNumber())) {
                         rooms.remove(room1);
+                        System.out.println("Room was removed!");
+                        notFound = false;
+                        break;
                     }
                 }
 
+                if(notFound)
+                    System.out.println("Invalid room number!");
+                
                 break;
             default:
                 System.out.println("Invalid choice!");
@@ -142,32 +170,36 @@ public class Manager extends User {// manager is a user.
         System.out.print("Enter the price change for this room type: ");
         double price = in.nextDouble();
 
-        switch (choice) {
+        switch (choice) {//finds the room type and sets price
             case 1:
                 for (Room rooms1 : rooms) {
-                    if (rooms1.getRoomType() == "Single") {
+                    if ("Single".equals(rooms1.getRoomType())) {
                         rooms1.setPricePerNight(price);
+                        System.out.println("Change successfull!");
                     }
                 }
                 break;
             case 2:
                 for (Room rooms1 : rooms) {
-                    if (rooms1.getRoomType() == "Double") {
+                    if ("Double".equals(rooms1.getRoomType())) {
                         rooms1.setPricePerNight(price);
+                        System.out.println("Change successfull!");
                     }
                 }
                 break;
             case 3:
                 for (Room rooms1 : rooms) {
-                    if (rooms1.getRoomType() == "Suite") {
+                    if ("Suite".equals(rooms1.getRoomType())) {
                         rooms1.setPricePerNight(price);
+                        System.out.println("Change successfull!");
                     }
                 }
                 break;
             case 4:
                 for (Room rooms1 : rooms) {
-                    if (rooms1.getRoomType() == "Deluxe") {
+                    if ("Deluxe".equals(rooms1.getRoomType())) {
                         rooms1.setPricePerNight(price);
+                        System.out.println("Change successfull!");
                     }
                 }
                 break;
@@ -182,28 +214,31 @@ public class Manager extends User {// manager is a user.
         System.out.println("--------------------------------------------------------------\n");
 
         System.out.println(" --- Managing System Users and Roles --- ");
-        System.out.println("What would you to do? (Enter a number)"
+        System.out.print("What would you to do? (Enter a number)"
                 + "\n1. Add a user"
                 + "\n2. Edit a user"
                 + "\n3. Remove a user"
-                + "\n4. Assign a role");
+                + "\n4. Assign a role"
+                + "\nEnter here: ");
         int choice = in.nextInt();
+        in.nextLine();
         
         switch (choice) {
             case 1://Add a user
                 LocalDate date = LocalDate.now();// to get current date
                 String dateString = date.toString();
-                System.out.println("Enter the following details: \nID:");
+                System.out.print("Enter the following details: \nID: ");
                 String ID = in.nextLine();
-                System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
+                System.out.print("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager\nEnter here: ");
                 int role = in.nextInt();
-                System.out.println("\nName:");
+                in.nextLine();
+                System.out.print("\nName: ");
                 String name = in.nextLine();
-                System.out.println("\nEmail:");
+                System.out.print("\nEmail: ");
                 String email = in.nextLine();
-                System.out.println("\nPhone number:");
+                System.out.print("\nPhone number: ");
                 String phone = in.nextLine();
-                System.out.println("\nAddress:");
+                System.out.print("\nAddress: ");
                 String address = in.nextLine();
 
                 switch (role) {
@@ -226,14 +261,18 @@ public class Manager extends User {// manager is a user.
             case 2://edit a user
                 System.out.print("Enter the ID for the user you want to edit: ");
                 ID = in.nextLine();
+                
+                boolean notFound = true;
                 for(User user: users){
-                    if(user.getUserId() == ID){
-                        System.out.println("What would you like to edit? (Enter a number)"
+                    if(user.getUserId().equals(ID)){
+                        System.out.print("What would you like to edit? (Enter a number)"
                                 + "\n1. Name"
                                 + "\n2. Email"
                                 + "\n3. Phone number"
-                                + "\n4. Address");
+                                + "\n4. Address"
+                                + "\nEnter here: ");
                         choice = in.nextInt();
+                        in.nextLine();
                         
                         switch (choice) {
                             case 1:// edit name
@@ -257,11 +296,16 @@ public class Manager extends User {// manager is a user.
                                 user.setUserAddress(address);
                                 break;
                         }
+                        
+                        notFound = false;
+                        break;
                     }
                     
-                    else
-                        System.out.println("there is no user under this ID");
                 }
+                
+                if(notFound)
+                    System.out.println("there is no user under this ID");
+                
                 break;
             case 3://remove a user
                 int counter = 0;
@@ -270,28 +314,43 @@ public class Manager extends User {// manager is a user.
                         counter++;
                 }
                 
+                int counter2 = 0;
+                for(User user: users){// makes sure that if there is only one manager then they can't be deleted
+                    if(user instanceof Receptionist)
+                        counter2++;
+                }
+                
                 System.out.print("Enter the ID of the user you want to remove: ");
                 ID = in.nextLine();
+                notFound = true;
                 for(User user: users){
-                    if(user.getUserId() == ID){
-                        if(user.getRole() == "Manager" & counter == 1)
-                            System.out.println("You cannot remove this user because they are the only manager!");
-                        else{
+                    if(user.getUserId().equals(ID)){
+                        if(("Manager".equals(user.getRole()) & counter == 1) | ("Receptionist".equals(user.getRole()) & counter2 == 1)){//makes sure that if theres only one manager/receptionist isnt deleted
+                            System.out.println("You cannot remove this user because they are the only " + user.getClass().getSimpleName() + "!");
+                            notFound = false;
+                            break;
+                        }
+                        else {//removes user
                             users.add(user);
                             System.out.println("The user was removed!");
+                            notFound = false;
+                            break;
                         }
                     }
                     
-                    else
-                        System.out.println("There is no user under this ID.");
                 }
+                
+                if(notFound)
+                    System.out.println("there is no user under this ID");
                 
                 break;
             case 4:// assign a role
                 System.out.print("Enter the ID of the user you want to edit the role for: ");
                 ID = in.nextLine();
+                
+                notFound = true;
                 for(User user: users){
-                    if(user.getUserId() == ID){
+                    if(user.getUserId().equals(ID)){
                         System.out.println("Select a role: (Enter a number)"
                                 + "\n1. Guest"
                                 + "\n2. Receptionist"
@@ -301,18 +360,27 @@ public class Manager extends User {// manager is a user.
                         switch(role){
                             case 1://assign guest role
                                 user.setRole("Guest");
+                                System.out.println("Change successfull!");
                                 break;
                             case 2://assign receptionist role
                                 user.setRole("Receptionist");
+                                System.out.println("Change successfull!");
                                 break;
                             case 3://assign manager role
                                 user.setRole("Manager");
+                                System.out.println("Change successfull!");
                                 break;
                             default :
                                 System.out.println("Invalid role!");
                         }
+                        
+                        notFound = false;
+                        break;
                     }
                 }
+                
+                 if(notFound)
+                    System.out.println("there is no user under this ID");
                 
                 break;
             default :

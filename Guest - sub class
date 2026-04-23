@@ -1,36 +1,42 @@
 package hotelappfinal;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Collections;
 
-
 public class Guest extends User {// guest is a user.
-    
-    Scanner input=new Scanner(System.in);
-   
-    
-  
-    private ArrayList<Reservation> guestReservation = new ArrayList(); // using ArrayList of reservation. To keep all guest's past and current booking.
-    
+
+    Scanner input = new Scanner(System.in);
+
+    private ArrayList<Reservation> guestReservation = new ArrayList();// using ArrayList of reservation. To keep all guest's past and current booking.
+    private Reservation reservation;//takes the most recent reservation made by the guest
+
     public Guest(String userId, String userJoiningDate, String userName, String userEmail, String userPhone, String userAddress, String role) {
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
 
-    
-  
+    public void setReservation() {
+        if (guestReservation.isEmpty()) {
+            reservation = null;
+        } else {
+            reservation = guestReservation.getLast();
+        }
+
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
     public ArrayList<Reservation> getGuestReservation() {
         return guestReservation;
     }
-    
-    
-    public void addReservation(Reservation reservation){
+
+    public void addReservation(Reservation reservation) {
         guestReservation.add(reservation);
     }
-   
-    
-    
-    
+
     public void updateupdateContactInfo(){
         System.out.println("--------------------------------------------------------------\n");
        
@@ -43,6 +49,7 @@ public class Guest extends User {// guest is a user.
         System.out.println(" 4- Updare All Information ");
         
        int selection=input.nextInt();
+       input.nextLine();//clear buffer line
        
         switch(selection){// we use switch for fatser and more accurate access for guest choice.
             
@@ -87,18 +94,16 @@ public class Guest extends User {// guest is a user.
          System.out.println("--------------------------------------------------------------");
         
     }
-    
-    
-    // lamia's methods 
-    
+
+    // lamia methods 
     // This method is used by the guest when looking for rooms and making reservations 
-    public void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
+    public static void SearchAvailableRooms(String CheckInDate, String CheckOutDate, int guests, ArrayList<Room> rooms, ArrayList<Reservation> reservations) {
 
         Collections.sort(rooms); // to display from highest price to lowest price
         int count = 0; //to check how many rooms available
         for (Room room1 : rooms) {//checks the rooms that have an available status
-            if (room1.getRoomStatus() == "Available") {
-                System.out.println((count+1) + ". " + room1 + "\n");
+            if ("Available".equals(room1.getRoomStatus()) & guests <= room1.getMaxOccupancy()) {
+                System.out.println((count + 1) + ". " + room1 + "\n");
                 count++;
             }
 
@@ -106,10 +111,10 @@ public class Guest extends User {// guest is a user.
 
         Collections.sort(reservations);// to display from highest price to lowest price
         for (Reservation reservation1 : reservations) { // checks the reservations that have different check in/out dates than what the guest requested
-            if (CheckInDate == reservation1.getCheckInDate() & CheckOutDate == reservation1.getCheckOutDate() & guests == reservation1.getNumberOfGuests()) {
+            if (CheckInDate.equals(reservation1.getCheckInDate()) & CheckOutDate.equals(reservation1.getCheckOutDate()) & !(reservation1.getReservationStatus().equals("Cancelled")) & guests <= reservation1.getRoom().getMaxOccupancy()) {
                 continue;
             } else {
-                System.out.println((count+1) + ". " + reservation1 + "\n");
+                System.out.println((count + 1) + ". " + reservation1.getRoom().toString() + "\n");
                 count++;
             }
 
@@ -123,7 +128,11 @@ public class Guest extends User {// guest is a user.
     //used by the guest to view reservation details
     @Override
     public String toString() {
-        return super.toString() + "\nReservation: " + guestReservation.getLast() + "\nService Request: " + guestReservation.getLast().getService().getLast();
+        if (reservation == null) {
+            return super.toString() + "\nReservation: none \nService Request: none";
+        } else {
+            return super.toString() + "\nReservation: " + reservation + "\nService Request: " + reservation.getCurrentService();
+        }
     }
 
     //used by guest to view the onvoice of their reservation
@@ -133,25 +142,30 @@ public class Guest extends User {// guest is a user.
 
     //used by the guest to pay their invoice
     public void MakeAPayment(Reservation r) {
-        if (r.getInvoice().getPaymentStatus() == "Unpaid") { //check that the payment is unpaid
-            System.out.print("Choose a payment method: \n1.Cash \n2.Card \n3.Online Transfer");
-            int paymentChoice = input.nextInt();
+        if ("Unpaid".equals(r.getInvoice().getPaymentStatus()) | "Partially Paid".equals(r.getInvoice().getPaymentStatus())) { //check that the payment is unpaid
+            System.out.print("Choose a payment method: \n1.Cash \n2.Card \n3.Online Transfer\nEnter here: ");
+            int paymentChoice = 0;
 
-            switch (paymentChoice) { //set the payment method based on choice
-                case 1:
-                    r.getInvoice().setPaymentMethod("Cash");
-                    break;
-                case 2:
-                    r.getInvoice().setPaymentMethod("Card");
-                    break;
-                case 3:
-                    r.getInvoice().setPaymentMethod("Online Transfer");
-                    break;
-                default:
-                    System.out.println("Invalid payment method!");
+            while (paymentChoice <= 0 | paymentChoice > 3) {
+                paymentChoice = input.nextInt();
+
+                switch (paymentChoice) { //set the payment method based on choice
+                    case 1:
+                        r.getInvoice().setPaymentMethod("Cash");
+                        break;
+                    case 2:
+                        r.getInvoice().setPaymentMethod("Card");
+                        break;
+                    case 3:
+                        r.getInvoice().setPaymentMethod("Online Transfer");
+                        break;
+                    default:
+                        System.out.println("Invalid payment method!");
+                        System.out.println("Try again.");
+                }
+
             }
-
-            System.out.print("How much would you like to pay?");
+            System.out.print("How much would you like to pay? ");
             double payment = input.nextDouble();
 
             while (payment < 0 | payment > r.getInvoice().getTotalAmount()) { // makes sure that the guest doesnt enter a number that is too much or too little
@@ -167,16 +181,14 @@ public class Guest extends User {// guest is a user.
 
             if (payment == r.getInvoice().getTotalAmount()) { //status changes based on amount
                 r.getInvoice().setPaymentStatus("Paid");
+                r.getInvoice().setTotalAmount(r.getInvoice().getTotalAmount() - payment);//changes amount left to be paid after payment
             } else if (payment < r.getInvoice().getTotalAmount() & payment > 0) {
+                r.getInvoice().setTotalAmount(r.getInvoice().getTotalAmount() - payment);//changes amount left to be paid after payment
                 r.getInvoice().setPaymentStatus("Partially Paid");
             }
 
-            System.out.println("Payment succefull!");
+            System.out.println("Payment succefull!\n");
             ViewInvoice(r); //view invoice after payment
         }
     }
 }
-    
-  
-    
-

@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,13 +14,15 @@ public class Receptionist extends User {// Receptionist is a user.
         super(userId, userJoiningDate, userName, userEmail, userPhone, userAddress, role);
     }
 
-    public void searchForAGuest(ArrayList<Guest> guest) {// ArrayList of all guests
+    public void searchForAGuest(ArrayList<User> users) {// ArrayList of all users
         System.out.println(" Please Enter the guest ID : ");
         int gId = input.nextInt();
-        for (Guest g : guest) {
+        for (User userr:users) {
+            if(userr instanceof Guest){
+                Guest g=(Guest)userr;
             if (g.getUserId().equals(gId)) {// to get the required ID.
                 System.out.println("--------------------------------------------------------------");
-            }
+            
             System.out.println(" The guest was found. ");
             System.out.println(" --- Guest Information --- ");// Display guest info.
             System.out.println("Guest Name : " + g.getUserName());
@@ -55,6 +56,8 @@ public class Receptionist extends User {// Receptionist is a user.
             }
         }
 
+    }
+        }
     }
 
     public void processServiceRequests(ArrayList<Service> service) {

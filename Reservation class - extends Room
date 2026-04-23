@@ -1,13 +1,15 @@
 package hotelappfinal;
 
-import java.io.PrintWriter;
-import java.time.LocalDate;
+import java.time.LocalDate;// to get real date
 import java.util.*;
-
-
+import java.time.format.DateTimeFormatter;//to custmize format of localdate
+/**
+ *
+ * @author lamyaalhamad
+ */
 public class Reservation implements Comparable<Reservation> {
 
-    Scanner input = new Scanner(System.in);
+    Scanner input = new Scanner(System.in);// halah add 
     private String reservationID;
     private String associatedGuestID;
     private String checkInDate;
@@ -17,127 +19,80 @@ public class Reservation implements Comparable<Reservation> {
     private String specialRequests;
     private String bookingDate;
     private User user;
-    private Room room; 
+    private Room room;
     private Invoice invoice;//invoice for current reservation
-    private ArrayList<Service> services;//saves all services for all reservations 
-    private static ArrayList<Invoice> allInvoices;//saves all invoices for all reservations 
+    private ArrayList<Service> services = new ArrayList<>();//saves all services for all reservations 
+    private Service service;
+    private static ArrayList<Invoice> allInvoices = new ArrayList<>();//saves all invoices for all reservations 
     private static int reservationCounter;// counts total reservations made and helps with ID generation
-    private FeedBack guestFeedBack; 
-    private static int countS = 1;
-    private static int countF = 1;
+    private FeedBack guestFeedBack; // i add set and get and add this one 
+    private static int countS = 1;// halah add
+    private static int countF = 1;// Hlaha dd
 
-    public Reservation(String AssociatedGuestID, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, Room room) {
-
+    public Reservation(User user, String CheckInDate, String CheckOutDate, int NumberOfGuests, String SpecialRequests, String BookingDate, Room room) {
+        
+        reservationCounter++;
         room.setRoomStatus("Reserved");
-
         setReservationID();
-        setAssociatedGuestID(AssociatedGuestID);
-        setCheckInDate(checkInDate);
-        setCheckOutDate(checkOutDate);
+        setRoom(room);
+        setAssociatedGuestID(user);
+        setCheckInDate(checkDates(CheckInDate, CheckOutDate), CheckInDate);
+        setCheckOutDate(checkDates(CheckInDate, CheckOutDate), CheckOutDate);
         setNumberOfGuests(NumberOfGuests);
         setSpecialRequests(SpecialRequests);
         setBookingDate(BookingDate);
         reservationStatus = "Confirmed";
-        reservationCounter++;
 
-        invoice = new Invoice(reservationID, room.getPricePerNight(), CheckInDate, CheckOutDate, services, AssociatedGuestID);
+        invoice = new Invoice(reservationID, room.getPricePerNight(), CheckInDate, CheckOutDate, services, user.getUserId());//auto generates an ivoice upon creating reservation
         allInvoices.add(invoice);
     }
 
-    public void setReservationID() {
+    public static ArrayList<Invoice> getAllInvoices() {
+        return allInvoices;
+    }
+
+    public void setReservationID() {// uses counter to autogenerate the id
         this.reservationID = "R00" + reservationCounter;
     }
 
-    public void setAssociatedGuestID(String AssociatedGuestID) {
-        if (AssociatedGuestID == "" | AssociatedGuestID == null & AssociatedGuestID != user.getUserId() & user.getRole() != "Guest") {
+    public void setCurrentService(Service service) {// sets last service requested
+        if(services.isEmpty())
+            service = null;
+        else
+           service = services.getLast();
+        
+    }
+
+    public Service getCurrentService() {
+        return service;
+    }
+
+    public void setAssociatedGuestID(User user) {//makes sure that the user is a guest
+        if (!(user.getRole().equals("Guest"))) {
             System.out.println("Invalid guest ID!");
         } else {
-            associatedGuestID = AssociatedGuestID;
+            associatedGuestID = user.getUserId();
         }
     }
 
-    //verifies date
-    public void setCheckInDate(String CheckInDate) {
-        int day = Integer.parseInt(CheckInDate.substring(0, 2));
-        int month = Integer.parseInt(CheckInDate.substring(3, 5));
-        int year = Integer.parseInt(CheckInDate.substring(6, 10));
-
-        if (year >= 2025) {
-            switch (month) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    if (day >= 1 & day <= 31) {
-                        checkInDate = CheckInDate;
-                    }
-                    break;
-                case 4:
-                case 6:
-                case 9:
-                case 11:
-                    if (day >= 1 & day <= 30) {
-                        checkInDate = CheckInDate;
-                    }
-                    break;
-                case 2:
-                    if (day >= 1 & day <= 29) {
-                        checkInDate = CheckInDate;
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid check in date!");
-            }
-        }
-
+    
+    public void setCheckInDate(Boolean check, String CheckInDate) {
+        if(check)
+            checkInDate = CheckInDate;
+        else
+            System.out.println("invalid check in date!");
     }
 
-    //verifies date
-    public void setCheckOutDate(String CheckOutDate) {
-        int day = Integer.parseInt(CheckOutDate.substring(0, 2));
-        int month = Integer.parseInt(CheckOutDate.substring(3, 5));
-        int year = Integer.parseInt(CheckOutDate.substring(6, 10));
-
-        if (CheckOutDate.compareTo(checkInDate) > 0) {
-            if (year >= 2025) {
-                switch (month) {
-                    case 1:
-                    case 3:
-                    case 5:
-                    case 7:
-                    case 8:
-                    case 10:
-                    case 12:
-                        if (day >= 1 & day <= 31) {
-                            checkOutDate = CheckOutDate;
-                        }
-                        break;
-                    case 4:
-                    case 6:
-                    case 9:
-                    case 11:
-                        if (day >= 1 & day <= 30) {
-                            checkOutDate = CheckOutDate;
-                        }
-                        break;
-                    case 2:
-                        if (day >= 1 & day <= 29) {
-                            checkOutDate = CheckOutDate;
-                        }
-                        break;
-                    default:
-                        System.out.println("Invalid check out date!");
-                }
-            }
-        } else {
-            System.out.println("Invalid!");
-        }
+    
+    public void setCheckOutDate(Boolean check, String CheckOutDate) {
+        if(check)
+            checkOutDate = CheckOutDate;
+        else
+            System.out.println("invalid check out date!");
     }
+    
 
-    public void setNumberOfGuests(int NumberOfGuests) {
+    public void setNumberOfGuests(int NumberOfGuests) {// ensure number of guests isnt more than the max occupancy of the room
         if (NumberOfGuests >= 1 & NumberOfGuests <= room.getMaxOccupancy()) {
             numberOfGuests = NumberOfGuests;
         } else {
@@ -147,12 +102,12 @@ public class Reservation implements Comparable<Reservation> {
 
     //Used by receptionist to change when the guest come and by the guest to cancel their reservation
     public void setReservationStatus(String ReservationStatus) {
-        switch (ReservationStatus) {
-            case "Confirmed":
-            case "Checked-Out":
-            case "Checked-in":
-            case "Cancelled":
-            case "No-Show":
+        switch (ReservationStatus.toLowerCase()) {
+            case "confirmed":
+            case "checked-Out":
+            case "checked-In":
+            case "cancelled":
+            case "no-show":
                 reservationStatus = ReservationStatus;
                 break;
             default:
@@ -166,56 +121,22 @@ public class Reservation implements Comparable<Reservation> {
     }
 
     public void setBookingDate(String BookingDate) {
-        int day = Integer.parseInt(BookingDate.substring(0, 2));
-        int month = Integer.parseInt(BookingDate.substring(3, 5));
-        int year = Integer.parseInt(BookingDate.substring(6, 10));
-
-        if (year >= 2025) {
-            switch (month) {
-                case 1:
-                case 3:
-                case 5:
-                case 7:
-                case 8:
-                case 10:
-                case 12:
-                    if (day >= 1 & day <= 31) {
-                        bookingDate = BookingDate;
-                    }
-                    break;
-                case 4:
-                case 6:
-                case 9:
-                case 11:
-                    if (day >= 1 & day <= 30) {
-                        bookingDate = BookingDate;
-                    }
-                    break;
-                case 2:
-                    if (day >= 1 & day <= 29) {
-                        bookingDate = BookingDate;
-                    }
-                    break;
-                default:
-                    System.out.println("Invalid booking date!");
-            }
-        }
-
+        this.bookingDate = BookingDate;
     }
 
-    public void addService(Service s) {
+    public void addService(Service s) {//Halah add 
         services.add(s);
     }
 
     public void setUser(User user) {
-        if (user != null) {
+        if (user != null & user.getRole().equals("Guest")) {
             this.user = user;
         } else {
             System.out.println("Invalid user!");
         }
     }
 
-    public void setInvoice(Invoice invoice) {
+    public void setInvoice(Invoice invoice) {// halah add 
         this.invoice = invoice;
     }
 
@@ -227,7 +148,7 @@ public class Reservation implements Comparable<Reservation> {
         }
     }
 
-    public void setGuestFeedBack(FeedBack guestFeedBack) {
+    public void setGuestFeedBack(FeedBack guestFeedBack) {//halah add 
         this.guestFeedBack = guestFeedBack;
     }
 
@@ -259,7 +180,7 @@ public class Reservation implements Comparable<Reservation> {
         return specialRequests;
     }
 
-    public Invoice getInvoice() {
+    public Invoice getInvoice() {// halah add 
         return invoice;
     }
 
@@ -279,17 +200,17 @@ public class Reservation implements Comparable<Reservation> {
         return room;
     }
 
-    public FeedBack getGuestFeedBack() {
+    public FeedBack getGuestFeedBack() {// halah add
         return guestFeedBack;
     }
 
-    public ArrayList<Service> getService() {
+    public ArrayList<Service> getService() {// halah add 
         return services;
     }
 
     @Override
     public String toString() { // to display details of the reservation
-        return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nSpecial request: " + specialRequests;
+        return room + "\nCheck in date: " + checkInDate + "\nCheck out date: " + checkOutDate + "\nNumber of guests: " + numberOfGuests + "\nReservation ID: " + reservationID + "\nReservation status: " + reservationStatus + "\nBooking Date: " + bookingDate + "\nSpecial request: " + specialRequests;
     }
 
     @Override
@@ -303,9 +224,9 @@ public class Reservation implements Comparable<Reservation> {
         }
     }
 
-    public void cheackOut() {
-        if (this.reservationStatus.equals("Cheacked-In")) {// To ensure that the reservation status is "Cheacked-in".
-            setReservationStatus("Checked-Out");// using the setter to update the status into "Cheacked-out".
+    public void cheackOut() {// halah add
+        if (this.reservationStatus.equals("Checked-In")) {// To ensure that the reservation status is "Cheacked-in".
+            setReservationStatus("Checked-Out");// using the setter to update the status into "Cheacked-out"
             getRoom().setRoomStatus("Available");// Changeing the room status to available.
             double finalInvoice = getInvoice().getTotalAmount();
             System.out.println("Final Invoice : " + finalInvoice);
@@ -313,15 +234,15 @@ public class Reservation implements Comparable<Reservation> {
 
     }
 
-    public void registerGuestArrival() {
+    public void registerGuestArrival() { //  halah add
         System.out.println("-----------------------------------");
-        if (this.reservationStatus.equals("Confirmed")) {// To ensure that the reservation statu is "Confirmed".
-            setReservationStatus("Cheacked-In");// using setters to cahnge reservation statue into "Cheacked-In".
+        if (this.reservationStatus.equals("Confirmed")) {// To ensure that the reservation status is "Confirmed".
+            setReservationStatus("Checked-In");// using setters to cahnge reservation status into "Cheacked-In".
             getRoom().setRoomStatus(("Occupied"));// Changeing the room status to Occupied.
-            System.out.println("Guest has been cheacked in successfully! ");
+            System.out.println("Guest has been checked in successfully! ");
 
         } else {
-            System.out.println("Cannot Cheack In. The reservation is not confrimed. ");
+            System.out.println("Cannot Check In. The reservation is not confrimed. ");
         }
         System.out.println("-----------------------------------");
     }
@@ -389,4 +310,13 @@ public class Reservation implements Comparable<Reservation> {
 
     }
     
+    
+    //verifies dates
+    public static boolean checkDates(String checkIn, String checkOut){//makes sure that dates entered by the user arent before the current date and are in the right order
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
+        LocalDate in = LocalDate.parse(checkIn, formatter);
+        LocalDate out = LocalDate.parse(checkOut, formatter);
+        
+        return (in.isAfter(LocalDate.now()) | in.equals(LocalDate.now())) & out.isAfter(LocalDate.now()) & out.isAfter(in);
+    }
 }

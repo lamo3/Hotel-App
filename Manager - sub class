@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -163,7 +162,7 @@ public class Manager extends User {// manager is a user.
         }
     }
 
-    public void UpdateRoomPricing(LinkedList<Room> rooms) {
+    public void UpdateRoomPricing(ArrayList<Room> rooms) {
         Scanner in = new Scanner(System.in);
         System.out.println("Which room type? (enter a number) \n1. Single \n2. Double \n3. Suite \n4. Deluxe");
         int choice = in.nextInt();

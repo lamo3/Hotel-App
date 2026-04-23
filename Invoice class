@@ -1,10 +1,19 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package hotelappfinal;
 
+import java.util.*;
+import java.time.LocalDate;// to get real date
+import java.time.format.DateTimeFormatter;//to custmize format of localdate
+import java.time.temporal.ChronoUnit;
 
-import java.util.ArrayList;
 
-
+/**
+ *
+ * @author lamyaalhamad
+ */
 public class Invoice {
 
     private String invoiceID;
@@ -29,19 +38,21 @@ public class Invoice {
         setInvoiceDate(checkOutDate);
         setServiceCharges(services);
         setTaxAmount();
-        setTotalAmount();
+        calculateTotalAmount();
         paymentStatus = "Unpaid";
+        paymentMethod = "Not chosen";
         associatedGuestID = guestID;
     }
 
-    public void setInvoiceID() {
+    public void setInvoiceID() {//uses the ounter to generate ID
         this.invoiceID = "IV00" + invoiceCounter;
     }
 
-    public void setRoomCharges(double price, String checkInDate, String checkOutDate) {
-         int checkInDay = Integer.parseInt(checkInDate.substring(0, 3));
-        int checkOutDay = Integer.parseInt(checkOutDate.substring(0, 3));
-        int numberOfDays = checkOutDay - checkInDay;
+    public void setRoomCharges(double price, String checkInDate, String checkOutDate) {//uses checkin/out dates to calculate total room charges
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);//to change the format of the date so that theyre all the same and dont give an error
+        LocalDate start = LocalDate.parse(checkInDate, formatter);//changes date from string to localdate
+        LocalDate end = LocalDate.parse(checkOutDate, formatter);//changes date from string to localdate
+        long numberOfDays = start.until(end, ChronoUnit.DAYS); // to get number of days stayed
         
         roomCharges = price*numberOfDays;
     }
@@ -51,7 +62,8 @@ public class Invoice {
     }
 
     public void setServiceCharges(ArrayList<Service> services) {
-        for(Service service: services){
+        serviceCharges = 0;   // reset first so the charges dont double
+        for(Service service: services){//to get total service charges for the guest
             serviceCharges += service.getPrice();
         }
     }
@@ -69,10 +81,17 @@ public class Invoice {
             discountAmount = 0;
     }
 
-    public void setTotalAmount() {
+    public void calculateTotalAmount() {
         totalAmount = roomCharges+serviceCharges+taxAmount-discountAmount;
     }
 
+    public void setTotalAmount(double total) {
+        if(total >= 0)
+            totalAmount = total;
+        else
+            System.out.println("Invalid!");
+    }
+    
     public void setPaymentStatus(String paymentStatus) {
         switch(paymentStatus){
             case "Unpaid":
@@ -148,6 +167,6 @@ public class Invoice {
     //used to help the guest view invoice
     @Override
     public String toString() {
-        return "Invoice ID: " + invoiceID + "\nReservation ID: " + associatedReservationID + "\nGuest ID: " + associatedGuestID + "\nRoom charges: " + roomCharges + "\nService charges: " + serviceCharges + "\nTax amount (15%): " + taxAmount + "\nDiscount amount (10%): " + discountAmount + "\nTotal amount: " + totalAmount + "\nPayment status: " + paymentStatus + "\nPayment method: " + paymentMethod;
+        return "Invoice ID: " + invoiceID + "\nReservation ID: " + associatedReservationID + "\nGuest ID: " + associatedGuestID + "\nRoom charges: " + roomCharges + "\nService charges: " + serviceCharges + "\nTax amount (15%): " + taxAmount + "\nDiscount amount (10%): " + discountAmount + "\nTotal amount left: " + totalAmount + "\nPayment status: " + paymentStatus + "\nPayment method: " + paymentMethod;
     }
 }

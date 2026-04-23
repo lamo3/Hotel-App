@@ -1,7 +1,8 @@
 package hotelappfinal;
-public class Room implements Comparable<Room> {
 
-    private static int roomCounter; //helps identify room number
+public class Room implements Comparable<Room>{
+
+    private static int roomCounter = 0; //helps identify room number
     private String roomNumber;
     private String roomType;
     private int floorNumber;
@@ -13,26 +14,27 @@ public class Room implements Comparable<Room> {
 
     //will help set details of rooms when booking
     public Room(String roomType, int floorNumber, String bedType) {
+        roomCounter++;
         setRoomNumber();
         setRoomType(roomType);
         setFloorNumber(floorNumber);
         setMaxOccupancy();
 
         //helps identify amenities available in each room type
-        switch (this.roomType) {
-            case "Single":
+        switch (this.roomType.toLowerCase()) {
+            case "single":
                 amenities[0] = "Wifi";
                 break;
-            case "Double":
+            case "double":
                 amenities[0] = "Wifi";
                 amenities[1] = "Mini Bar";
                 break;
-            case "Suite":
+            case "suite":
                 amenities[0] = "Wifi";
                 amenities[1] = "Mini Bar";
                 amenities[2] = "Sea View";
                 break;
-            case "Deluxe":
+            case "deluxe":
                 amenities[0] = "Wifi";
                 amenities[1] = "Mini Bar";
                 amenities[2] = "Sea View";
@@ -44,33 +46,33 @@ public class Room implements Comparable<Room> {
         }
 
         //sets price based on room type
-        switch (this.roomType) {
-            case "Single":
+        switch (this.roomType.toLowerCase()) {
+            case "single":
                 pricePerNight = 500.0;
                 break;
-            case "Double":
+            case "double":
                 pricePerNight = 1000.0;
                 break;
-            case "Suite":
+            case "suite":
                 pricePerNight = 2000.0;
                 break;
-            case "Deluxe":
+            case "deluxe":
                 pricePerNight = 3000.0;
                 break;
 
         }
 
         //makes sure that the bed type selected is valid
-        switch (bedType) {
-            case "Single":
-            case "Double":
-            case "King":
+        switch (bedType.toLowerCase()) {
+            case "single":
+            case "double":
+            case "king":
                 this.bedType = bedType;
+                break;
             default:
                 System.out.println("Invalid bed type!");
         }
 
-        roomCounter++;
     }
 
     //make sure the room number stays within 1-20
@@ -84,11 +86,11 @@ public class Room implements Comparable<Room> {
 
     // makes sure the room type selected is valid
     public void setRoomType(String roomType) {
-        switch (roomType) {
-            case "Single":
-            case "Double":
-            case "Suite":
-            case "Deluxe":
+        switch (roomType.toLowerCase()) {
+            case "single":
+            case "double":
+            case "suite":
+            case "deluxe":
                 this.roomType = roomType;
                 break;
             default:
@@ -107,11 +109,11 @@ public class Room implements Comparable<Room> {
 
     //used by the receptionist to change the room status
     public void setRoomStatus(String roomStatus) {
-        switch (roomStatus) {
-            case "Available":
-            case "Occupied":
-            case "Under Maintenance":
-            case "Reserved":
+        switch (roomStatus.toLowerCase()) {
+            case "available":
+            case "occupied":
+            case "under maintenance":
+            case "reserved":
                 this.roomStatus = roomStatus;
                 break;
             default:
@@ -121,17 +123,17 @@ public class Room implements Comparable<Room> {
 
     //helps identify max occupancy based on room type
     public void setMaxOccupancy() {
-        switch (this.roomType) {
-            case "Single":
+        switch (this.roomType.toLowerCase()) {
+            case "single":
                 this.maxOccupancy = 1;
                 break;
-            case "Double":
+            case "double":
                 this.maxOccupancy = 2;
                 break;
-            case "Suite":
+            case "suite":
                 this.maxOccupancy = 3;
                 break;
-            case "Deluxe":
+            case "deluxe":
                 this.maxOccupancy = 4;
                 break;
 
@@ -191,7 +193,7 @@ public class Room implements Comparable<Room> {
 
     @Override
     public String toString() { //displays room details
-        return "Room number: " + roomNumber + "\nRoom Type" + roomType + "\nPrice per night: " + pricePerNight;
+        return "Room number: " + roomNumber + "\nRoom Type: " + roomType + "\nPrice per night: " + pricePerNight;
     }
 
     @Override

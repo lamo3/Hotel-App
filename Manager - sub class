@@ -57,7 +57,7 @@ public class Manager extends User {// manager is a user.
 
     // lamia method
     //helps manager carry out their job
-    public void ManageRoomInventory(LinkedList<Room> rooms) {
+    public void ManageRoomInventory(ArrayList<Room> rooms) {
         Scanner in = new Scanner(System.in);
         boolean notFound = true;// to check that the room specified is exists
         

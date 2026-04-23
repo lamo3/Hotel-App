@@ -1,135 +1,208 @@
+package hotelappfinal;
 
-       package hotel1;
-
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.time.LocalDate;
+import java.io.*;//to prnt on a txt file
+import java.time.LocalDate; //to get accurate dates
+import java.time.format.DateTimeFormatter; //toformat the dates in this format: DD/MM/YYYY
 import java.util.*;
 
-public class Hotel1{
+public class HotelAppFinal {
 
-     static int countF = 1;
-    static ArrayList<Guest> guest;
-    static ArrayList<Reservation> reservation;
-    static ArrayList<Room> room;
+    static int countF = 1;//?
+    static ArrayList<Guest> guest = new ArrayList<>();//?
+    static ArrayList<Reservation> reservation = new ArrayList<>(); // all reservations not just the guest using the app
+    static ArrayList<Room> room = new ArrayList<>(); // rooms in the hotel
     static Scanner input = new Scanner(System.in);
-    static ArrayList<User> users = new ArrayList<>();
-    static ArrayList<Service> services = new ArrayList<>();
-    static ArrayList<FeedBack> feedBacks = new ArrayList<>();
+    static ArrayList<User> users = new ArrayList<>(); // to save all the users that have used the app
+    static ArrayList<Service> services = new ArrayList<>();// all the services not just the guest using the app
+    static ArrayList<FeedBack> feedBacks = new ArrayList<>();// all the feedbacks not just the guest using the app
     static ArrayList<Invoice> invoices = new ArrayList<>();
 
     public static void main(String[] args) {
+        int count = 0;//to check if there are any users under a specific Email/Phone number
+        LocalDate date = LocalDate.now();
+        String dateString = date.toString();//to give accurate dates
 
-        System.out.println("----- Welcome to our Hotel App! -----");
-        System.out.print("1. Login to your existing account \n2. Create an account and sign up \nChoose a number: ");
-        int choice = input.nextInt();
-        input.nextLine(); // fix scanner skip
+        //rooms available at the hotel
+        room.add(new Room("Single", 1, "Single"));
+        room.add(new Room("Double", 3, "Double"));
+        room.add(new Room("Suite", 10, "King"));
+        room.add(new Room("Deluxe", 8, "King"));
+        room.add(new Room("Single", 7, "Single"));
+        room.add(new Room("Double", 9, "Double"));
+        room.add(new Room("Suite", 5, "King"));
+        room.add(new Room("Deluxe", 4, "King"));
+        room.add(new Room("Single", 2, "Single"));
+        room.add(new Room("Suite", 6, "King"));
 
-        switch (choice) {
-            case 1:
-                System.out.print("Enter your email or phone number: ");
-                String emailOrPhone = input.nextLine();
-                for (User user : users) {
-                    if (emailOrPhone == user.getUserEmail() | emailOrPhone == user.getUserPhone()) {
-                        System.out.println("Login successfull!");
-                        switch (user.getRole()) {
-                            case "Guest":
-                                Guest g = (Guest) user;
-                                Guest(users, g);
-                                break;
-                            case "Receptionist":
-                                Receptionist r = (Receptionist) user;
-                                Receptionist(users, r);
-                                break;
-                            case "Manager":
-                                Manager m = (Manager) user;
-                                Manager(users, m);
-                                break;
-                        }
-                    } else {
-                        System.out.println("There is no account under this email/phone number!");
-                    }
-                }
-                break;
+        //users
+        users.add(new Guest("U001", "2026/01/10", "Sara Ahmed", "sara.ahmed@email.com", "0501234567", "Riyadh, Saudi Arabia", "Guest"));
+        users.add(new Guest("U002", "2026/02/05", "Omar Khalid", "omar.khalid@email.com", "0509876543", "Jeddah, Saudi Arabia", "Guest"));
+        users.add(new Receptionist("U003", "2025/12/15", "Lama Alharbi", "lama.alharbi@email.com", "0551122334", "Dammam, Saudi Arabia", "Receptionist"));
+        users.add(new Manager("U004", "2025/11/01", "Faisal Abdullah", "faisal.abdullah@email.com", "0567788990", "Riyadh, Saudi Arabia", "Manager"));
+        users.add(new Guest("U005", "2026/03/20", "Noura Hassan", "noura.hassan@email.com", "0544455667", "Khobar, Saudi Arabia", "Guest"));
 
-            case 2:
-                LocalDate date = LocalDate.now();
-                String dateString = date.toString();
-                System.out.println("Enter the following details: \nID:");
-                String ID = input.nextLine();
-                System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager");
-                int role = input.nextInt();
-                input.nextLine(); // fix scanner skip
-                System.out.println("\nName:");
-                String name = input.nextLine();
-                System.out.println("\nEmail:");
-                String email = input.nextLine();
-                System.out.println("\nPhone number:");
-                String phone = input.nextLine();
-                System.out.println("\nAddress:");
-                String address = input.nextLine();
+        //reservations
+        Reservation r1 = new Reservation(users.getFirst(), "20/05/2026", "25/05/2026", 3, "", dateString, room.get(2));
+        Reservation r2 = new Reservation(users.get(1), "03/06/2026", "10/06/2026", 1, "", dateString, room.get(0));
+        Reservation r3 = new Reservation(users.getLast(), "29/07/2026", "03/08/2026", 2, "Extra water", dateString, room.get(1));
+        Guest g1 = (Guest) users.getFirst(), g2 = (Guest) users.get(1), g3 = (Guest) users.getLast();
+        g1.getGuestReservation().add(r1);
+        g2.getGuestReservation().add(r2);
+        g3.getGuestReservation().add(r3);
+        reservation.add(r1);
+        reservation.add(r2);
+        reservation.add(r3);
 
-                for (User user : users) {
-                    if (email == user.getUserEmail() | phone == user.getUserPhone()) {
-                        System.out.println("An account already exists under this email/phone number. would you like to log in? (Enter yes/no)");
-                        String yesOrNo = input.next();
+        System.out.println("----- Welcome to the Oasis Retreat App! -----");
+        int choice;
 
-                        if (yesOrNo.toLowerCase().equals("yes")) {
+        System.out.print("1. Login to your existing account \n2. Create an account and sign up \nChoose a number (Enter 0 to exit): ");
+
+        do {
+            choice = input.nextInt();
+            input.nextLine();//clear buffer after nextInt
+
+            switch (choice) {
+                case 1: //this case is used if the user already has an account
+                    System.out.print("Enter your email or phone number: ");
+                    String emailOrPhone = input.next();
+
+                    for (User user : users) {
+                        if (emailOrPhone.equals(user.getUserEmail()) | emailOrPhone.equals(user.getUserPhone())) { //checks if there is an account under the given email/phone in the user arraylist
                             System.out.println("Login successfull!");
                             switch (user.getRole()) {
                                 case "Guest":
-                                    Guest g = (Guest) user;
-                                    Guest(users, g);
+                                    Guest g = (Guest) user; //used to make sure that the details of current user is used and not a past user
+                                    Guest(users, g); //if the user is a guest they will be taken to the guest module
                                     break;
                                 case "Receptionist":
-                                    Receptionist r = (Receptionist) user;
-                                    Receptionist(users, r);
+                                    Receptionist r = (Receptionist) user; //used to make sure that the details of current user is used and not a past user
+                                    Receptionist(users, r); //if the user is a receptionist they will be taken to the receptionist module
                                     break;
                                 case "Manager":
-                                    Manager m = (Manager) user;
-                                    Manager(users, m);
+                                    Manager m = (Manager) user; //used to make sure that the details of current user is used and not a past user
+                                    Manager(users, m); //if the user is a manager they will be taken to the manager module
                                     break;
                             }
+
+                            count++;
+                            break; //stops iterating through users after logging in
+                        }
+
+                    }
+
+                    if (count == 0) {
+                        System.out.print("\nThere is no account under this email/phone number! Would you like to create an account? (Enter 1 for no and 2 for yes): ");
+                        choice = input.nextInt();
+                        if (choice == 1) {
+                            choice = 0;
+                            System.out.println("\nThank you for the Oasis Retreat App!");
+                            continue;
+                        } else if (choice == 2) {
+                            continue;
                         } else {
-                            System.out.println("Thank you for using our hotel app!");
+                            System.out.println("Invalid option!");
+                            System.exit(0);// exits the program completely
                         }
                     }
-                }
 
-                switch (role) {
-                    case 1:
-                        users.add(new Guest(ID, dateString, name, email, phone, address, "Guest"));
-                        System.out.println("Sign in successfull!");
-                        StatsDocument();
-                        Guest(users, (Guest) users.getLast());
-                        break;
-                    case 2:
-                        users.add(new Receptionist(ID, dateString, name, email, phone, address, "Receptionist"));
-                        System.out.println("Sign in successfull!");
-                        StatsDocument();
-                        Receptionist(users, (Receptionist) users.getLast());
-                        break;
-                    case 3:
-                        users.add(new Manager(ID, dateString, name, email, phone, address, "Manager"));
-                        System.out.println("Sign in successfull!");
-                        StatsDocument();
-                        Manager(users, (Manager) users.getLast());
-                        break;
-                    default:
-                        System.out.println("Invalid role!");
-                }
-                break;
-            default:
-                System.out.println("Invalid option!");
-        }
+                    break;
+                case 2: //this case is used when the user is creating a new account
+
+                    System.out.print("\nEnter the following details: \nID: ");
+                    input.next();
+                    String ID = input.nextLine();
+
+                    System.out.println("\nRole (Enter a number): \n1.Guest \n2.Receptionist \n3.Manager\nEnter here: ");
+                    int role = input.nextInt();
+
+                    System.out.print("\nName: ");
+                    input.nextLine();
+                    String name = input.nextLine();
+
+                    System.out.print("\nEmail: ");
+                    String email = input.nextLine();
+
+                    System.out.print("\nPhone number: ");
+                    String phone = input.nextLine();
+
+                    System.out.print("\nAddress: ");
+                    String address = input.nextLine();
+
+                    for (User user : users) {
+                        if (email.equals(user.getUserEmail()) | phone.equals(user.getUserPhone())) { //checks if there is an already account under the given email/phone in the user arraylist
+                            System.out.println("An account already exists under this email/phone number. would you like to log in? (Enter 1 for no and 2 for no)");
+                            int yesOrNo = input.nextInt();
+
+                            if (yesOrNo == 2) {
+                                System.out.println("Login successfull!");
+                                switch (user.getRole()) {
+                                    case "Guest":
+                                        Guest g = (Guest) user; //used to make sure that the details of current user is used and not a past user
+                                        Guest(users, g); //if the user is a guest they will be taken to the guest module
+                                        break;
+                                    case "Receptionist":
+                                        Receptionist r = (Receptionist) user; //used to make sure that the details of current user is used and not a past user
+                                        Receptionist(users, r); //if the user is a receptionist they will be taken to the receptionist module
+                                        break;
+                                    case "Manager":
+                                        Manager m = (Manager) user; //used to make sure that the details of current user is used and not a past user
+                                        Manager(users, m); //if the user is a manager they will be taken to the manager module
+                                        break;
+                                }
+                            } else if (yesOrNo == 1) {
+                                System.out.println("\n-------------------------------------");
+                                System.out.println("Thank you for using the Oasis Retreat App!"); // app stops
+                                System.exit(0);
+                            } else {
+                                System.out.println("Invalid option!");
+                                System.exit(0);
+                            }
+                        }
+                    }
+
+                    switch (role) {
+                        case 1:
+                            users.add(new Guest(ID, dateString, name, email, phone, address, "Guest"));
+                            System.out.println("Sign in successfull!");
+                            StatsDocument();// to update hotel stats on the txt doc
+                            Guest(users, (Guest) users.getLast()); //creates and adds a new user/guest to the user arraylist and takes the user to the guest module
+                            break;
+                        case 2:
+                            users.add(new Receptionist(ID, dateString, name, email, phone, address, "Receptionist"));
+                            System.out.println("Sign in successfull!");
+                            StatsDocument();// to update hotel stats on the txt doc
+                            Receptionist(users, (Receptionist) users.getLast()); //creates and adds a new user/receptionist to the user arraylist and takes the user to the receptionist module
+                            break;
+                        case 3:
+                            users.add(new Manager(ID, dateString, name, email, phone, address, "Manager"));
+                            System.out.println("Sign in successfull!");
+                            StatsDocument();// to update hotel stats on the txt doc
+                            Manager(users, (Manager) users.getLast());//creates and adds a new user/manager to the user arraylist and takes the user to the manager module
+                            break;
+                        default:
+                            System.out.println("Invalid role!");
+                    }
+
+                    break;
+                case 0:
+                    System.out.println("\n--------------------------------");
+                    System.out.println("Thank you for using the Oasis Retreat App!");
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid option!");
+
+            }
+
+            System.out.print("Would you like to do anything else?\n1. Login to your existing account \n2. Create an account and sign up \nChoose a number (Enter 0 to exit): ");
+
+        } while (choice != 0);
     }
 
     public static void Guest(ArrayList<User> users, Guest guest) {
 
-        System.out.println("----- Welcome " + guest.getUserName() + "! -----");
-        System.out.println("What would you like to do? (Enter a number; 0 to exit)"
+        System.out.println("\n----- Welcome " + guest.getUserName() + "! -----");
+        System.out.print("What would you like to do? (Enter a number; 0 to exit)"
                 + "\n1. Search for available rooms "
                 + "\n2. Make a reservation"
                 + "\n3. Cancel a reservation"
@@ -138,157 +211,253 @@ public class Hotel1{
                 + "\n6. View invoice and payment status"
                 + "\n7. Make a payment"
                 + "\n8. Submit feedback"
-                + "\n9. Update contact information");
+                + "\n9. Update contact information"
+                + "\nEnter here: ");
         int choice = input.nextInt();
-        input.nextLine();
+        input.nextLine();//clear buffer after nextInt
 
-        while (choice != 0) {
+        while (choice != 0) { //the while loop insures that the user can do multiple services without having to restart the app multiple times
             switch (choice) {
                 case 1:
                     System.out.println("--------------------------------------------------------------\n");
-                    System.out.println(" --- Search Available Rooms --- ");
-                    System.out.print("Enter a check in date: ");
-                    String checkInDate = input.nextLine();
-                    System.out.print("Enter a check out date: ");
-                    String checkOutDate = input.nextLine();
+
+                    String checkInDate;
+                    String checkOutDate;
+
+                    boolean correct;
+                    do {//to make sure that the dates arent invalid in any way
+                        System.out.print("Enter a check in date(DD/MM/YYYY): ");
+                        checkInDate = input.nextLine();
+                        System.out.print("Enter a check out date(DD/MM/YYYY): ");
+                        checkOutDate = input.nextLine();
+
+                        if (Reservation.checkDates(checkInDate, checkOutDate)) {
+                            correct = false;
+                        } else {
+                            System.out.println("Invalid dates! try again.");
+                            correct = true;
+                        }
+
+                    } while (correct);
+
                     System.out.print("Enter the number of guests: ");
                     int noOfGuests = input.nextInt();
-                    input.nextLine();
-                    System.out.println("Rooms available: ");
+
+                    System.out.println("Rooms available: \n");
+
                     guest.SearchAvailableRooms(checkInDate, checkOutDate, noOfGuests, room, reservation);
                     break;
-
                 case 2:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- Make a Reservation --- ");
-                    LocalDate date = LocalDate.now();
-                    String dateNow = date.toString();
-                    System.out.print("Enter a check in date: ");
-                    checkInDate = input.nextLine();
-                    System.out.print("Enter a check out date: ");
-                    checkOutDate = input.nextLine();
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
+                    LocalDate date = LocalDate.now(); // to give an accurate booking date
+                    String dateNow = date.format(formatter);
+
+                    do {
+                        System.out.print("Enter a check in date(DD/MM/YYYY): ");
+                        checkInDate = input.nextLine();
+                        System.out.print("Enter a check out date(DD/MM/YYYY): ");
+                        checkOutDate = input.nextLine();
+
+                        if (Reservation.checkDates(checkInDate, checkOutDate)) {
+                            correct = false;
+                        } else {
+                            System.out.println("Invalid dates! try again.");
+                            correct = true;
+                        }
+
+                    } while (correct);
+
                     System.out.print("Enter the number of guests: ");
                     noOfGuests = input.nextInt();
+
                     input.nextLine();
-                    System.out.println("Any special requests? ");
+                    System.out.print("Any special requests? ");
                     String specialRequests = input.nextLine();
-                    System.out.println("Rooms available: ");
+
+                    System.out.println("Rooms available: "); // so the guest can choose a room that isn't reserved
+
                     guest.SearchAvailableRooms(checkInDate, checkOutDate, noOfGuests, room, reservation);
-                    System.out.println("Which room would you like? (Enter the room number)");
+                    System.out.print("Which room would you like? (Enter the room number) \nEnter here: ");
                     String roomNumber = input.nextLine();
+
                     for (Room rooms : room) {
-                        if (rooms.getRoomNumber() == roomNumber) {
-                            reservation.add(new Reservation(guest.getUserId(), checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms));
+                        if (rooms.getRoomNumber().equals(roomNumber)) {
+                            Reservation r = new Reservation(guest, checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms);
+                            reservation.add(r); //creates and adds a reseravtion to the arraylist
+                            guest.getGuestReservation().add(r);//adds it to the list of reservations that the guest has made before
+                            System.out.println("Reservation confirmed! \nYour Reservation ID is: " + r.getReservationID());
                         }
                     }
-                    invoices.add(guest.getGuestReservation().getLast().getInvoice());
-                    StatsDocument();
-                    break;
 
+                    StatsDocument();// to update hotel stats on the txt doc
+
+                    break;
                 case 3:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- Cancel a Reservation --- ");
                     System.out.print("Enter your reservation ID: ");
                     String reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            reservation.setReservationStatus("Cancelled");
-                            System.out.println("Cancellation successfull!");
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    boolean found = false;// to check if there are any reservations under the id
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {
+                            r.setReservationStatus("Cancelled");
+                            System.out.println("Cancellation successful!");
+                            found = true;
+                            break;
                         }
                     }
+
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
                     StatsDocument();
                     break;
-
                 case 4:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- View Reservation Details --- ");
                     System.out.print("Enter your reservation ID: ");
                     reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            System.out.println(reservation);
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    found = false;
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {
+                            System.out.println("\n" + r);
+                            found = true;
+                            break;
                         }
                     }
-                    break;
 
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
+                    break;
                 case 5:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- Request a Service --- ");
                     System.out.print("Enter your reservation ID: ");
                     reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            Service s = reservation.requestAService();
-                            reservation.getService().add(s);
-                            services.add(s);
-                            System.out.println("Request successfull!");
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    found = false;
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {
+
+                            Service s = r.requestAService();
+                            services.add(s);//service is added to the list of all the services requested in the hotel
+                            r.getInvoice().setServiceCharges(r.getService());//calculate service charges
+                            r.getInvoice().setTaxAmount();//calculate tax amount including service
+                            r.getInvoice().calculateTotalAmount();//calculate total amount including service
+
+                            System.out.println("Request successful!");
+                            found = true;
+                            break;
                         }
                     }
+
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
                     StatsDocument();
                     break;
-
                 case 6:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- View Invoice and Payment Status --- ");
                     System.out.print("Enter your reservation ID: ");
                     reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            guest.ViewInvoice(reservation);
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    found = false;
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {
+                            System.out.println();
+                            guest.ViewInvoice(r);
+                            found = true;
+                            break;
                         }
                     }
-                    break;
 
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
+                    break;
                 case 7:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- Make a Payment --- ");
                     System.out.print("Enter your reservation ID: ");
                     reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            guest.MakeAPayment(reservation);
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    found = false;
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {//uses reservation ID to identify which invoice to view and pay
+                            guest.MakeAPayment(r);
+                            found = true;
+                            break;
                         }
                     }
-                    StatsDocument();
+
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
+                    StatsDocument(); // to update hotel stats on the txt doc
                     break;
 
                 case 8:
                     System.out.println("--------------------------------------------------------------\n");
+
                     System.out.println(" --- Submit Feedback --- ");
                     System.out.print("Enter your reservation ID: ");
                     reservationID = input.nextLine();
-                    for (Reservation reservation : guest.getGuestReservation()) {
-                        if (reservation.getReservationID() == reservationID) {
-                            FeedBack f = reservation.submitGuestFeedback();
-                            reservation.setGuestFeedBack(f);
-                            feedBacks.add(f);
-                        } else {
-                            System.out.println("There is no reservation under this ID.");
+
+                    found = false;
+
+                    for (Reservation r : guest.getGuestReservation()) {
+                        if (r.getReservationID().equals(reservationID)) {
+
+                            r.submitGuestFeedback();
+                            feedBacks.add(r.getGuestFeedBack());//adds fedback to the list of feedbacks made about the hotel
+
+                            System.out.println("Feedback submitted successfully!");
+                            found = true;
+                            break;
                         }
                     }
+
+                    if (!found) {
+                        System.out.println("There is no reservation under this ID.");
+                    }
+
                     StatsDocument();
                     break;
-
                 case 9:
-                    guest.updateupdateContactInfo();
-                    StatsDocument();
-                    break;
+                    guest.updateupdateContactInfo();//if the guest wants to edit any personal info
 
+                    StatsDocument();// to update hotel stats on the txt doc
+
+                    break;
                 default:
                     System.out.println("Invalid option!");
             }
 
-            System.out.println("Would you like to do anything else?(Enter a number; 0 to exit)"
+            System.out.println("--------------------------------------------------------------");
+            System.out.print("\nWould you like to do anything else?(Enter a number; 0 to exit)"
                     + "\n1. Search for available rooms "
                     + "\n2. Make a reservation"
                     + "\n3. Cancel a reservation"
@@ -297,9 +466,10 @@ public class Hotel1{
                     + "\n6. View invoice and payment status"
                     + "\n7. Make a payment"
                     + "\n8. Submit feedback"
-                    + "\n9. Update contact information");
+                    + "\n9. Update contact information"
+                    + "\nEnter here: ");
             choice = input.nextInt();
-            input.nextLine();
+            input.nextLine();//clear buffer after nextInt
         }
     }
 
@@ -365,7 +535,7 @@ public class Hotel1{
                 case 4:
                     System.out.println("--------------------------------------------------------------\n");
                     System.out.println(" --- Create a Walk-In Reservation --- ");
-                    receptionist.CreateAWalkInReservation(room, reservation);
+                    receptionist.CreateAWalkInReservation(room, reservation, users);
                     StatsDocument();
                     break;
 
@@ -383,11 +553,11 @@ public class Hotel1{
                 case 6:
                     System.out.println("--------------------------------------------------------------\n");
                     System.out.println(" --- Change Room Status --- ");
-                    System.out.print("Enter the reservation ID: ");
-                    resID = input.nextLine();
-                    System.out.println("Enter new status (Available / Occupied / Reserved / Under Maintenance): ");
+                    System.out.print("Enter the Room Number: ");
+                    String roomNum = input.nextLine();
+                    System.out.print("Enter new status (Available / Occupied / Reserved / Under Maintenance): ");
                     String newStatus = input.nextLine();
-                    receptionist.ChangeRoomStatus(newStatus, resID, reservation);
+                    receptionist.ChangeRoomStatus(newStatus, roomNum, room);
                     System.out.println("Room status updated.");
                     StatsDocument();
                     break;
@@ -512,6 +682,7 @@ public class Hotel1{
                     statuReservedCount++;
                     break;
             }
+
         }
         System.out.println("Available : " + statuAvailableCount);
         System.out.println("Occupied : " + statuOccupiedCount);
@@ -523,6 +694,7 @@ public class Hotel1{
         int typeDouble = 0;
         int typeSuite = 0;
         int typeDeluxe = 0;
+
         for (Room rr : room) {
             switch (rr.getRoomType()) {
                 case "Single":
@@ -536,7 +708,9 @@ public class Hotel1{
                 case "Deluxe":
                     typeDeluxe++;
                     break;
+
             }
+
         }
         System.out.println("Single Rooms : " + typeSingle);
         System.out.println("Double Rooms : " + typeDouble);
@@ -547,72 +721,93 @@ public class Hotel1{
         System.out.println("Occupancy Rate : " + occupancyRate + "% ");
     }
 
-    public static void StatsDocument() {
+    public static void StatsDocument() { // to save hotel stats on a txt doc
+        File hotelFile = new File("/Users/lamyaalhamad/Desktop/NetBeans/HotelAppFinal/HotelAppData.txt");
         try {
-            PrintWriter print = new PrintWriter("/Users/lamyaalhamad/Desktop/NetBeans/HotelAppFinal");
+            PrintWriter print = new PrintWriter(hotelFile);
 
+            print.println("--- Oasis Retreat Statistics ---");
             ListIterator<Room> it1 = room.listIterator();
-            print.println("=== Rooms in the Hotel ===");
+            print.println("\n=== Rooms in the Hotel ==="); // prints all the rooms
             int i = 1;
             while (it1.hasNext()) {
                 print.println(i + ". " + it1.next());
                 i++;
             }
 
-            ListIterator<Reservation> it2 = reservation.listIterator();
-            print.println("=== Rservations Made ===");
-            int j = 1;
-            while (it2.hasNext()) {
-                print.println(j + ". " + it2.next());
-                j++;
+            print.println("\n=== Rservations Made ===");
+            if (!(reservation.isEmpty())) {
+                ListIterator<Reservation> it2 = reservation.listIterator();// prints all the reservations
+                int j = 1;
+                while (it2.hasNext()) {
+                    print.println(j + ". " + it2.next());
+                    j++;
+                }
             }
 
-            ListIterator<Service> it3 = services.listIterator();
-            print.println("=== Services requested ===");
-            int h = 1;
-            while (it3.hasNext()) {
-                print.println(h + ". " + it3.next() + "\n");
-                h++;
+            print.println("\n=== Services requested ===");
+            if (!(services.isEmpty())) {
+                ListIterator<Service> it3 = services.listIterator(); // prints all the services
+                int h = 1;
+                while (it3.hasNext()) {
+                    print.println(h + ". " + it3.next() + "\n");
+                    h++;
+                }
             }
 
-            ListIterator<FeedBack> it4 = feedBacks.listIterator();
-            print.println("=== Feedacks Sent ===");
-            int s = 1;
-            while (it4.hasNext()) {
-                print.println(s + ". " + it4.next() + "\n");
-                s++;
+            print.println("\n=== Feedacks Sent ===");
+            if (!(feedBacks.isEmpty())) {
+                ListIterator<FeedBack> it4 = feedBacks.listIterator();// prints all the feedbacks
+                int s = 1;
+                while (it4.hasNext()) {
+                    print.println(s + ". " + it4.next() + "\n");
+                    s++;
+                }
             }
 
             int m = 0;
             int r = 0;
             int g = 0;
+
+            print.println("\n=== Managers in the hotel ===");// prints all the manager
             for (User user : users) {
-                print.println("=== Managers in the hotel ===");
+
                 if (user instanceof Manager) {
                     print.println(user);
                     m++;
                 }
-                print.println("=== Receptionist in the hotel ===");
+
+            }
+
+            print.println("\n=== Receptionist in the hotel ===");// prints all the receptionists
+            for (User user : users) {
+
                 if (user instanceof Receptionist) {
                     print.println(user);
                     r++;
                 }
-                print.println("=== Guests in the hotel ===");
+
+            }
+
+            print.println("\n=== Guests in the hotel ===");// prints all the guests
+            for (User user : users) {
+
                 if (user instanceof Guest) {
                     print.println(user);
                     g++;
                 }
             }
-
-            ListIterator<Invoice> it5 = invoices.listIterator();
-            print.println("=== Invoices ===");
-            int x = 1;
-            while (it5.hasNext()) {
-                print.println(x + ". " + it5.next() + "\n");
-                x++;
+            print.println("\n=== Invoices ===");
+            if (!(invoices.isEmpty())) {
+                ListIterator<Invoice> it5 = Reservation.getAllInvoices().listIterator();// prints all the invoices
+                int x = 1;
+                while (it5.hasNext()) {
+                    print.println(x + ". " + it5.next() + "\n");
+                    x++;
+                }
             }
 
-            print.println("Total stats:"
+            print.println("\n=== Total Stats: ===" //prints the totals
                     + "\nNumber of Rooms: " + Room.getRoomCounter()
                     + "\nNumber of Reservations (Past and current): " + Reservation.getReservationCounter()
                     + "\nNumber of Services: " + services.size()
@@ -622,13 +817,11 @@ public class Hotel1{
                     + "\nNumber of Receptionists: " + r
                     + "\nNumber of Guests: " + g
                     + "\nNumber of Invoices: " + Invoice.getInvoiceCounter());
+
+            print.close();
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
         }
-    }
-}
 
-    
-    
-    
+    }
 }

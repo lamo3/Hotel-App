@@ -111,7 +111,7 @@ public class Guest extends User {// guest is a user.
 
         Collections.sort(reservations);// to display from highest price to lowest price
         for (Reservation reservation1 : reservations) { // checks the reservations that have different check in/out dates than what the guest requested
-            if (CheckInDate.equals(reservation1.getCheckInDate()) & CheckOutDate.equals(reservation1.getCheckOutDate()) & !(reservation1.getReservationStatus().equals("Cancelled")) & guests <= reservation1.getRoom().getMaxOccupancy()) {
+            if (CheckInDate.equals(reservation1.getCheckInDate()) & CheckOutDate.equals(reservation1.getCheckOutDate()) & !(reservation1.getReservationStatus().equals("Cancelled")) & !(guests <= reservation1.getRoom().getMaxOccupancy())) {
                 continue;
             } else {
                 System.out.println((count + 1) + ". " + reservation1.getRoom().toString() + "\n");

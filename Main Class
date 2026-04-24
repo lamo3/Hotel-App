@@ -1,13 +1,15 @@
+
+
 package hotelappfinal;
 import java.io.*;//to prnt on a txt file
 import java.time.LocalDate; //to get accurate dates
 import java.time.format.DateTimeFormatter; //toformat the dates in this format: DD/MM/YYYY
 import java.util.*;
 
-public class Hotel1 {
+public class HotelAppFinal {
 
     
-    static ArrayList<Guest> guest = new ArrayList<>();//?
+    static ArrayList<Guest> guest = new ArrayList<>();//to store guests specifically
     static ArrayList<Reservation> reservation = new ArrayList<>(); // all reservations not just the guest using the app
     static ArrayList<Room> room = new ArrayList<>(); // rooms in the hotel
     static Scanner input = new Scanner(System.in);
@@ -48,19 +50,23 @@ public class Hotel1 {
         g1.getGuestReservation().add(r1);
         g2.getGuestReservation().add(r2);
         g3.getGuestReservation().add(r3);
+        invoices.add(r1.getInvoice());
+        invoices.add(r2.getInvoice());
+        invoices.add(r3.getInvoice());
         reservation.add(r1);
         reservation.add(r2);
         reservation.add(r3);
 
+        StatsDocument();
+        
         System.out.println("----- Welcome to the Oasis Retreat App! -----");
         int choice;
-
+        
         System.out.print("1. Login to your existing account \n2. Create an account and sign up \nChoose a number (Enter 0 to exit): ");
-
+        choice = input.nextInt();
+        input.nextLine();//clear buffer after nextInt
+        
         do {
-            choice = input.nextInt();
-            input.nextLine();//clear buffer after nextInt
-
             switch (choice) {
                 case 1: //this case is used if the user already has an account
                     System.out.print("Enter your email or phone number: ");
@@ -96,7 +102,7 @@ public class Hotel1 {
                         if (choice == 1) {
                             choice = 0;
                             System.out.println("\nThank you for the Oasis Retreat App!");
-                            continue;
+                            System.exit(0);// exits the program completely
                         } else if (choice == 2) {
                             continue;
                         } else {
@@ -195,6 +201,8 @@ public class Hotel1 {
 
             System.out.print("Would you like to do anything else?\n1. Login to your existing account \n2. Create an account and sign up \nChoose a number (Enter 0 to exit): ");
 
+            choice = input.nextInt();
+            input.nextLine();//clear buffer after nextInt
         } while (choice != 0);
     }
 
@@ -248,7 +256,6 @@ public class Hotel1 {
                     break;
                 case 2:
                     System.out.println("--------------------------------------------------------------\n");
-
                     System.out.println(" --- Make a Reservation --- ");
 
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
@@ -267,7 +274,6 @@ public class Hotel1 {
                             System.out.println("Invalid dates! try again.");
                             correct = true;
                         }
-
                     } while (correct);
 
                     System.out.print("Enter the number of guests: ");
@@ -288,12 +294,12 @@ public class Hotel1 {
                             Reservation r = new Reservation(guest, checkInDate, checkOutDate, noOfGuests, specialRequests, dateNow, rooms);
                             reservation.add(r); //creates and adds a reseravtion to the arraylist
                             guest.getGuestReservation().add(r);//adds it to the list of reservations that the guest has made before
+                            invoices.add(r.getInvoice());
                             System.out.println("Reservation confirmed! \nYour Reservation ID is: " + r.getReservationID());
                         }
                     }
 
                     StatsDocument();// to update hotel stats on the txt doc
-
                     break;
                 case 3:
                     System.out.println("--------------------------------------------------------------\n");
@@ -653,6 +659,10 @@ public class Hotel1 {
     }
 
     public static void viewHotalStatistics() {
+        for(User user: users){
+            if(user instanceof Guest)
+                guest.add((Guest)user);
+        }
         System.out.println("Total number of rooms : " + room.size());// using .size() to get the total number of rooms
         System.out.println("Total number of Reservation : " + reservation.size());// using .size() to get the total number of reservation
         System.out.println(" Total number of guests : " + guest.size());// using .size() to get the total number of guest
@@ -726,7 +736,7 @@ public class Hotel1 {
             print.println("\n=== Rooms in the Hotel ==="); // prints all the rooms
             int i = 1;
             while (it1.hasNext()) {
-                print.println(i + ". " + it1.next());
+                print.println(i + ". " + it1.next() + "\n");
                 i++;
             }
 
@@ -735,7 +745,7 @@ public class Hotel1 {
                 ListIterator<Reservation> it2 = reservation.listIterator();// prints all the reservations
                 int j = 1;
                 while (it2.hasNext()) {
-                    print.println(j + ". " + it2.next());
+                    print.println(j + ". " + it2.next() + "\n");
                     j++;
                 }
             }

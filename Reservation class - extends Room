@@ -1,5 +1,4 @@
 package hotelappfinal;
-
 import java.time.LocalDate;// to get real date
 import java.util.*;
 import java.time.format.DateTimeFormatter;//to custmize format of localdate
@@ -200,11 +199,11 @@ public class Reservation implements Comparable<Reservation> {
         return room;
     }
 
-    public FeedBack getGuestFeedBack() {// halah add
+    public FeedBack getGuestFeedBack() {
         return guestFeedBack;
     }
 
-    public ArrayList<Service> getService() {// halah add 
+    public ArrayList<Service> getService() {
         return services;
     }
 
@@ -224,26 +223,26 @@ public class Reservation implements Comparable<Reservation> {
         }
     }
 
-    public void cheackOut() {// halah add
-        if ("Checked-In".equalsIgnoreCase(this.reservationStatus)) {
+    public void cheackOut() {
+        if ("Checked-In".equalsIgnoreCase(this.reservationStatus)) {//Cheacking 
             this.reservationStatus = "Checked-Out";
             getRoom().setRoomStatus("Available");
             double finalInvoice = getInvoice().getTotalAmount();
             System.out.println("Final Invoice : " + finalInvoice);
             System.out.println("Guest has been checked out successfully!");
-        } else {
+        } else {//defult statment 
             System.out.println("Error: Cannot check out. Current status is: " + this.reservationStatus);
         }
 
     }
 
-    public void registerGuestArrival() { //  halah add
+    public void registerGuestArrival() { 
         System.out.println("-----------------------------------");
-        if ("Confirmed".equalsIgnoreCase(this.reservationStatus)) {
+        if ("Confirmed".equalsIgnoreCase(this.reservationStatus)) {//Cheacking 
             this.reservationStatus = "Checked-In";
-            getRoom().setRoomStatus("Occupied");
+            getRoom().setRoomStatus("Occupied");//using getter 
             System.out.println("Guest has been checked in successfully! ");
-        } else {
+        } else {//defult statment 
             System.out.println("Cannot Check In. The reservation is not confirmed (Current: " + this.reservationStatus + ").");
         }
         System.out.println("-----------------------------------");
@@ -301,7 +300,7 @@ public class Reservation implements Comparable<Reservation> {
             if (comment != null && !comment.equals("")) {// if the user has submmited a comment. We will use the cons that accepts a comment.
                 setGuestFeedBack(new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, comment, LocalDate.now().toString()));
                 return new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, comment, LocalDate.now().toString());
-            } else {//// else if the user hasn't submmited a comment. We will use the cons that doesn't accepts a comment.
+            } else {//// else if the user hasn't submmited a comment. We will use the cons who doesn't accepts a comment.
                 setGuestFeedBack(new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, LocalDate.now().toString()));
                 return new FeedBack(feedbackId, this.associatedGuestID, this.reservationID, rating, LocalDate.now().toString());
 

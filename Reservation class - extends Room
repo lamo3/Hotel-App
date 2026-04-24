@@ -225,24 +225,26 @@ public class Reservation implements Comparable<Reservation> {
     }
 
     public void cheackOut() {// halah add
-        if (this.reservationStatus.equals("Checked-In")) {// To ensure that the reservation status is "Cheacked-in".
-            setReservationStatus("Checked-Out");// using the setter to update the status into "Cheacked-out"
-            getRoom().setRoomStatus("Available");// Changeing the room status to available.
+        if ("Checked-In".equalsIgnoreCase(this.reservationStatus)) {
+            this.reservationStatus = "Checked-Out";
+            getRoom().setRoomStatus("Available");
             double finalInvoice = getInvoice().getTotalAmount();
             System.out.println("Final Invoice : " + finalInvoice);
+            System.out.println("Guest has been checked out successfully!");
+        } else {
+            System.out.println("Error: Cannot check out. Current status is: " + this.reservationStatus);
         }
 
     }
 
     public void registerGuestArrival() { //  halah add
         System.out.println("-----------------------------------");
-        if (this.reservationStatus.equals("Confirmed")) {// To ensure that the reservation status is "Confirmed".
-            setReservationStatus("Checked-In");// using setters to cahnge reservation status into "Cheacked-In".
-            getRoom().setRoomStatus(("Occupied"));// Changeing the room status to Occupied.
+        if ("Confirmed".equalsIgnoreCase(this.reservationStatus)) {
+            this.reservationStatus = "Checked-In";
+            getRoom().setRoomStatus("Occupied");
             System.out.println("Guest has been checked in successfully! ");
-
         } else {
-            System.out.println("Cannot Check In. The reservation is not confrimed. ");
+            System.out.println("Cannot Check In. The reservation is not confirmed (Current: " + this.reservationStatus + ").");
         }
         System.out.println("-----------------------------------");
     }

@@ -313,6 +313,7 @@ public class HotelAppFinal {
                     for (Reservation r : guest.getGuestReservation()) {
                         if (r.getReservationID().equals(reservationID)) {
                             r.setReservationStatus("Cancelled");
+                            r.getRoom().setRoomStatus("Available");
                             System.out.println("Cancellation successful!");
                             found = true;
                             break;

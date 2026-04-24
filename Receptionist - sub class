@@ -16,8 +16,8 @@ public class Receptionist extends User {// Receptionist is a user.
 
     public void searchForAGuest(ArrayList<User> users) {// ArrayList of all users
         System.out.println(" Please Enter the guest ID : ");
-        int gId = input.nextInt();
-        for (User userr:users) {
+        String gId = input.nextLine();
+        for (User userr: users) {
             if(userr instanceof Guest){
                 Guest g=(Guest)userr;
             if (g.getUserId().equals(gId)) {// to get the required ID.

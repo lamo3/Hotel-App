@@ -2,10 +2,7 @@ package hotelappfinal;
 import java.time.LocalDate;// to get real date
 import java.util.*;
 import java.time.format.DateTimeFormatter;//to custmize format of localdate
-/**
- *
- * @author lamyaalhamad
- */
+
 public class Reservation implements Comparable<Reservation> {
 
     Scanner input = new Scanner(System.in);// halah add 

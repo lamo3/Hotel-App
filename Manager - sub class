@@ -20,7 +20,7 @@ public class Manager extends User {// manager is a user.
         System.out.print("Enter end date (YYYY-MM-DD): ");
         LocalDate endDate = LocalDate.parse(input.next());
         
-        // FIXED: Formatter to match the DD/MM/YYYY format used in your Reservation objects
+        // Formatter to match the DD/MM/YYYY format used in  Reservation objects
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH);
 
         double totalRevenue = 0;
@@ -30,7 +30,7 @@ public class Manager extends User {// manager is a user.
         int totalOutstandingPayment = 0;
 
         for (Reservation r : reservation) {
-            // FIXED: Parsing logic now uses the formatter to avoid the crash
+            // Parsing logic now uses the formatter to avoid the crash
             LocalDate checkIn = LocalDate.parse(r.getCheckInDate(), formatter);
             LocalDate checkOut = LocalDate.parse(r.getCheckOutDate(), formatter);
 
@@ -40,7 +40,7 @@ public class Manager extends User {// manager is a user.
 
                 totalRevenue += r.getInvoice().getTotalAmount();
 
-                // FIXED: Check the room status string correctly
+                //  Check the room status string correctly
                 if ("Occupied".equalsIgnoreCase(r.getRoom().getRoomStatus())) {
                     totalOccupancyRooms++;
                 }
@@ -60,7 +60,7 @@ public class Manager extends User {// manager is a user.
         System.out.println("******************************");
         System.out.println("Total Revenue : " + totalRevenue);
         
-        // FIXED: Percentage calculation logic
+        //  Percentage calculation logic
         if (totalRooms > 0) {
             double rate = ((double) totalOccupancyRooms / totalRooms) * 100;
             System.out.println("Occupancy Rates: " + rate + "%");
